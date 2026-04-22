@@ -1,0 +1,17 @@
+name: Epitech mirror
+
+on: push
+
+jobs:
+  push_to_mirror:
+    name: Push to epitech mirror
+    runs-on: ubuntu-latest
+    if: github.repository == vars.REPO
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: ${{ vars.MIRROR_SSH_URL }}
+          ssh_private_key: ${{ secrets.GIT_SSH_KEY }}
