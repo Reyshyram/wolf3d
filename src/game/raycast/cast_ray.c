@@ -12,7 +12,6 @@
 #include <SFML/System/Vector2.h>
 #include <math.h>
 #include <stddef.h>
-#include <stdlib.h>
 
 #include "graphics/engine.h"
 
@@ -129,14 +128,11 @@ void draw_walls(ray_t *ray, game_data_t *d, size_t x)
 
 void cast_ray(game_data_t *d, size_t x)
 {
-    ray_t *ray = malloc(sizeof(ray_t));
+    ray_t ray;
 
-    if (!ray)
-        return;
-    init_raycast_struct(d, x, ray);
-    get_distance_1(ray, d);
-    get_distance_2(ray, d);
-    get_wall_info(ray, d);
-    draw_walls(ray, d, x);
-    free(ray);
+    init_raycast_struct(d, x, &ray);
+    get_distance_1(&ray, d);
+    get_distance_2(&ray, d);
+    get_wall_info(&ray, d);
+    draw_walls(&ray, d, x);
 }
