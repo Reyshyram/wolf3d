@@ -17,6 +17,7 @@
     #include <SFML/Window/Event.h>
     #include <SFML/Window/Types.h>
     #include <SFML/Window/VideoMode.h>
+    #include <stdbool.h>
 
     #include "graphics/resources.h"
 

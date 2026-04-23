@@ -46,10 +46,35 @@ typedef struct game_s {
     float camera_height;
 } game_data_t;
 
+typedef struct ray_s {
+    float camera_plane_x;
+    sfVector2f ray_dir;
+    sfVector2i map_tile;
+    sfVector2f side_distance;
+    sfVector2f delta_distance;
+    sfVector2i step_dir;
+    float perpendicular_dist;
+    bool was_wall_hit;
+    bool was_x_side_hit;
+    float camera_plane_length;
+    int line_height;
+    int horizon_y;
+    int draw_start_y;
+    int line_start;
+    int line_end;
+    float wall_hit_coord;
+    int wall_texture_ind;
+    float texture_x;
+    float texture_y_top;
+    float texture_y_bottom;
+    sfColor tint;
+} ray_t;
+
 scene_t *game_create(void);
 void game_enter(engine_t *engine);
 void game_exit(engine_t *engine);
 void game_draw(engine_t *engine);
+void cast_ray(game_data_t *d, size_t x);
 void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
 
