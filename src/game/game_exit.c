@@ -6,6 +6,7 @@
 */
 
 #include <SFML/Graphics/RenderWindow.h>
+#include <SFML/Graphics/VertexArray.h>
 #include <stdlib.h>
 
 #include "graphics/engine.h"
@@ -18,6 +19,8 @@ void game_exit(engine_t *engine)
 
     if (!data)
         return;
+    if (data->rays)
+        sfVertexArray_destroy(data->rays);
     free(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, true);
 }
