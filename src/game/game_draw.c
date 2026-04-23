@@ -5,13 +5,9 @@
 ** Draw the game scene
 */
 
-#include <SFML/Graphics/Color.h>
 #include <SFML/Graphics/RenderStates.h>
 #include <SFML/Graphics/RenderWindow.h>
-#include <SFML/Graphics/Vertex.h>
 #include <SFML/Graphics/VertexArray.h>
-#include <SFML/System/Vector2.h>
-#include <math.h>
 #include <stddef.h>
 
 #include "graphics/engine.h"
