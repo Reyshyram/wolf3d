@@ -15,6 +15,13 @@
     #define WIN_HEIGHT 1080
     #define WIN_WIDTH 1920
     #define FPS 60
+
+    #define W_FAST 5500
+    #define W_BASIC 40000
+    #define W_SLOW 175000
 // clang-format on
+
+int print_help(void);
+int print_lore(void);
 
 #endif /* !WOFL3D_H */
