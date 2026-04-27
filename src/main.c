@@ -35,11 +35,6 @@ static void run_game(engine_t *engine)
     engine_destroy(engine);
 }
 
-static int print_help(void)
-{
-    return SUCCESS;
-}
-
 int main(int ac, char **av, char **env)
 {
     engine_t engine = {0};
@@ -47,6 +42,8 @@ int main(int ac, char **av, char **env)
 
     if (ac == 2 && !strcmp(av[1], "-h"))
         return print_help();
+    if (ac == 2 && !strcmp(av[1], "-lore"))
+        return print_lore();
     if (ac != 1)
         return ERROR;
     if (!is_graphical(env)) {
