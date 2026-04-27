@@ -5,7 +5,9 @@
 ** Exit the game scene
 */
 
+#include <SFML/Graphics/RectangleShape.h>
 #include <SFML/Graphics/RenderWindow.h>
+#include <SFML/Graphics/Shader.h>
 #include <SFML/Graphics/VertexArray.h>
 #include <stdlib.h>
 
@@ -19,8 +21,12 @@ void game_exit(engine_t *engine)
 
     if (!data)
         return;
+    if (data->floor_ceil_shader)
+        sfShader_destroy(data->floor_ceil_shader);
     if (data->rays)
         sfVertexArray_destroy(data->rays);
+    if (data->floor_ceil)
+        sfRectangleShape_destroy(data->floor_ceil);
     free(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, true);
 }

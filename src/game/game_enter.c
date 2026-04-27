@@ -5,8 +5,11 @@
 ** Initialize the game scene
 */
 
+#include <SFML/Graphics/Glsl.h>
 #include <SFML/Graphics/PrimitiveType.h>
+#include <SFML/Graphics/RectangleShape.h>
 #include <SFML/Graphics/RenderWindow.h>
+#include <SFML/Graphics/Shader.h>
 #include <SFML/Graphics/VertexArray.h>
 #include <SFML/System/Vector2.h>
 #include <string.h>
@@ -44,6 +47,30 @@ static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
+static void set_up_floor_ceil(game_data_t *data)
+{
+    sfVector2u textures_size = {NB_WALL_TEXTURES * WALL_TEXTURE_WIDTH,
+        WALL_TEXTURE_HEIGHT};
+
+    data->floor_ceil_shader =
+        sfShader_createFromFile(nullptr, nullptr, FLOOR_CEIL_SHADER_PATH);
+    data->floor_ceil = sfRectangleShape_create();
+    sfRectangleShape_setSize(data->floor_ceil,
+        (sfVector2f) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
+    sfShader_setTextureUniform(data->floor_ceil_shader, "u_textures",
+        data->wall_textures);
+    sfShader_setVec2Uniform(data->floor_ceil_shader, "u_resolution",
+        (sfGlslVec2) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
+    sfShader_setVec2Uniform(data->floor_ceil_shader, "u_textures_size",
+        (sfGlslVec2) {(float) textures_size.x, (float) textures_size.y});
+    sfShader_setFloatUniform(data->floor_ceil_shader, "u_tile_size",
+        (float) WALL_TEXTURE_WIDTH);
+    sfShader_setFloatUniform(data->floor_ceil_shader, "u_floor_index",
+        FLOOR_TILE_INDEX);
+    sfShader_setFloatUniform(data->floor_ceil_shader, "u_ceil_index",
+        CEIL_TILE_INDEX);
+}
+
 void game_enter(engine_t *engine)
 {
     game_data_t *data = (game_data_t *) engine->scene->data;
@@ -59,6 +86,7 @@ void game_enter(engine_t *engine)
     sfVertexArray_setPrimitiveType(data->rays, sfLines);
     data->wall_textures =
         resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
+    set_up_floor_ceil(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
