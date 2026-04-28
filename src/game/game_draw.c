@@ -24,7 +24,7 @@ void game_draw(engine_t *engine)
         return;
     sfVertexArray_clear(d->rays);
     draw_floor_and_ceil(engine, d);
-    for (size_t x = 0; x < WIN_WIDTH; x++)
+    for (size_t x = 0; x <= WIN_WIDTH; x++)
         cast_wall_ray(d, x);
     states.texture = d->wall_textures;
     sfRenderWindow_drawVertexArray(engine->window, d->rays, &states);
