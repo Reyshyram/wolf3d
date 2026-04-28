@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2026
 ** wolf3d
 ** File description:
-** cast_ray
+** cast_wall_ray
 */
 
 #include <SFML/Graphics/Color.h>
@@ -129,7 +129,7 @@ static void append_to_vertices(ray_t *ray, game_data_t *d, size_t x)
             {ray->texture_x, ray->texture_y_bottom}});
 }
 
-void cast_ray(game_data_t *d, size_t x)
+void cast_wall_ray(game_data_t *d, size_t x)
 {
     ray_t ray = {0};
 

@@ -19,6 +19,11 @@
     #define WALL_TEXTURE_WIDTH 64
     #define WALL_TEXTURE_HEIGHT 64
     #define WALL_TEXTURES_PATH SPRITES_PATH "wall_textures.png"
+    #define NB_WALL_TEXTURES 8
+
+    #define FLOOR_CEIL_SHADER_PATH SHADERS_PATH "floor_ceil.frag"
+    #define FLOOR_TILE_INDEX 3
+    #define CEIL_TILE_INDEX 6
 
     #define WALL_HEIGHT_MULT 1
 
@@ -40,6 +45,8 @@ typedef struct {
 typedef struct game_s {
     int map[MAP_WIDTH][MAP_HEIGHT];
     sfVertexArray *rays;
+    sfRectangleShape *floor_ceil;
+    sfShader *floor_ceil_shader;
     sfTexture *wall_textures;
     player_t player;
     sfVector2f camera_plane;
@@ -74,8 +81,10 @@ scene_t *game_create(void);
 void game_enter(engine_t *engine);
 void game_exit(engine_t *engine);
 void game_draw(engine_t *engine);
-void cast_ray(game_data_t *d, size_t x);
 void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
+
+void cast_wall_ray(game_data_t *d, size_t x);
+void draw_floor_and_ceil(engine_t *engine, game_data_t *d);
 
 #endif /* !GAME_H */
