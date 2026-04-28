@@ -92,8 +92,8 @@ static void get_wall_info(ray_t *ray, game_data_t *d)
     if (ray->line_start < 0)
         ray->line_start = 0;
     ray->line_end = ray->line_height / 2 + ray->horizon_y;
-    if (ray->line_end >= WIN_HEIGHT)
-        ray->line_end = WIN_HEIGHT - 1;
+    if (ray->line_end > WIN_HEIGHT)
+        ray->line_end = WIN_HEIGHT;
     ray->wall_hit_coord =
         (ray->was_x_side_hit ? d->player.pos.y : d->player.pos.x)
         + ray->perpendicular_dist
