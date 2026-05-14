@@ -38,6 +38,10 @@
 
     #define MOUSE_X_SENSITIVITY 0.002F
     #define MOUSE_Y_SENSITIVITY 2.0F
+
+    #define DEFAULT_FOV 0.66F
+    #define SPRINT_FOV 0.8F
+    #define CROUCH_FOV 0.5F
 // clang-format on
 
 typedef struct {
@@ -55,7 +59,9 @@ typedef struct game_s {
     sfTexture *wall_textures;
     player_t player;
     sfVector2f camera_plane;
+    sfVector2f camera_plane_base;
     float camera_height;
+    float fov;
 } game_data_t;
 
 typedef struct ray_s {

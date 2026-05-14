@@ -49,12 +49,12 @@ static void rotate_camera(game_data_t *d, float angle)
     float cos_a = cosf(angle);
     float sin_a = sinf(angle);
     float prev_dir_x = d->player.view_dir.x;
-    float prev_plane_x = d->camera_plane.x;
+    float prev_base_x = d->camera_plane_base.x;
 
     d->player.view_dir.x = prev_dir_x * cos_a - d->player.view_dir.y * sin_a;
     d->player.view_dir.y = prev_dir_x * sin_a + d->player.view_dir.y * cos_a;
-    d->camera_plane.x = prev_plane_x * cos_a - d->camera_plane.y * sin_a;
-    d->camera_plane.y = prev_plane_x * sin_a + d->camera_plane.y * cos_a;
+    d->camera_plane_base.x = prev_base_x * cos_a - d->camera_plane_base.y * sin_a;
+    d->camera_plane_base.y = prev_base_x * sin_a + d->camera_plane_base.y * cos_a;
 }
 
 static void move_player(game_data_t *d, float dx, float dy)
@@ -141,12 +141,19 @@ void game_update(engine_t *engine)
 #ifdef DEBUG
     print_framerate();
 #endif
-    handle_camera_movement(d, engine);
-    movement = get_player_movement(engine->dt, d);
-    if (sfKeyboard_isKeyPressed(sfKeyLShift))
+    if (sfKeyboard_isKeyPressed(sfKeyLShift)) {
         speed_mult = SPRINT_MULT;
-    else if (sfKeyboard_isKeyPressed(sfKeyLControl))
+        d->fov = SPRINT_FOV;
+    } else if (sfKeyboard_isKeyPressed(sfKeyLControl)) {
         speed_mult = CROUCH_MULT;
+        d->fov = CROUCH_FOV;
+    } else {
+        d->fov = DEFAULT_FOV;
+    }
+    handle_camera_movement(d, engine);
+    d->camera_plane.x = d->camera_plane_base.x * d->fov;
+    d->camera_plane.y = d->camera_plane_base.y * d->fov;
+    movement = get_player_movement(engine->dt, d);
     if (movement.x != 0 || movement.y != 0)
         move_player(d, movement.x * speed_mult, movement.y * speed_mult);
 }

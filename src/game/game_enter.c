@@ -83,7 +83,9 @@ void game_enter(engine_t *engine)
     memcpy(data->map, WORLD_MAP, sizeof(data->map));
     data->player.pos = (sfVector2f) {15, 15};
     data->player.view_dir = (sfVector2f) {-1, 0};
-    data->camera_plane = (sfVector2f) {0, 0.66F};
+    data->camera_plane = (sfVector2f) {0, DEFAULT_FOV};
+    data->camera_plane_base = (sfVector2f) {0, 1.0F};
+    data->fov = DEFAULT_FOV;
     data->rays = sfVertexArray_create();
     sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
     sfVertexArray_setPrimitiveType(data->rays, sfLines);
