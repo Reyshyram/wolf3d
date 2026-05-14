@@ -28,6 +28,8 @@
     #define WALL_HEIGHT_MULT 1
 
     #define MOVE_SPEED 5
+    #define SPRINT_MULT 1.5F
+    #define CROUCH_MULT 0.5F
     #define COLLISION_MARGIN 0.1F
 
     #define CAMERA_ROT_SPEED 1

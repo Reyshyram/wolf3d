@@ -134,6 +134,7 @@ void game_update(engine_t *engine)
 {
     game_data_t *d = (game_data_t *) engine->scene->data;
     sfVector2f movement = {0};
+    float speed_mult = 1;
 
     if (!d)
         return;
@@ -142,6 +143,10 @@ void game_update(engine_t *engine)
 #endif
     handle_camera_movement(d, engine);
     movement = get_player_movement(engine->dt, d);
+    if (sfKeyboard_isKeyPressed(sfKeyLShift))
+        speed_mult = SPRINT_MULT;
+    else if (sfKeyboard_isKeyPressed(sfKeyLControl))
+        speed_mult = CROUCH_MULT;
     if (movement.x != 0 || movement.y != 0)
-        move_player(d, movement.x, movement.y);
+        move_player(d, movement.x * speed_mult, movement.y * speed_mult);
 }
