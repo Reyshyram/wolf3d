@@ -74,6 +74,15 @@ static void set_up_floor_ceil(game_data_t *data)
         CEIL_TILE_INDEX);
 }
 
+static void init_player(game_data_t *data)
+{
+    data->player.pos = (sfVector2f) {15, 15};
+    data->player.view_dir = (sfVector2f) {-1, 0};
+    data->camera_plane = (sfVector2f) {0, DEFAULT_FOV};
+    data->camera_plane_base = (sfVector2f) {0, 1.0F};
+    data->fov = DEFAULT_FOV;
+}
+
 void game_enter(engine_t *engine)
 {
     game_data_t *data = (game_data_t *) engine->scene->data;
@@ -81,11 +90,7 @@ void game_enter(engine_t *engine)
     if (!data)
         return;
     memcpy(data->map, WORLD_MAP, sizeof(data->map));
-    data->player.pos = (sfVector2f) {15, 15};
-    data->player.view_dir = (sfVector2f) {-1, 0};
-    data->camera_plane = (sfVector2f) {0, DEFAULT_FOV};
-    data->camera_plane_base = (sfVector2f) {0, 1.0F};
-    data->fov = DEFAULT_FOV;
+    init_player(data);
     data->rays = sfVertexArray_create();
     sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
     sfVertexArray_setPrimitiveType(data->rays, sfLines);

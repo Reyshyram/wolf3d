@@ -53,8 +53,10 @@ static void rotate_camera(game_data_t *d, float angle)
 
     d->player.view_dir.x = prev_dir_x * cos_a - d->player.view_dir.y * sin_a;
     d->player.view_dir.y = prev_dir_x * sin_a + d->player.view_dir.y * cos_a;
-    d->camera_plane_base.x = prev_base_x * cos_a - d->camera_plane_base.y * sin_a;
-    d->camera_plane_base.y = prev_base_x * sin_a + d->camera_plane_base.y * cos_a;
+    d->camera_plane_base.x =
+        prev_base_x * cos_a - d->camera_plane_base.y * sin_a;
+    d->camera_plane_base.y =
+        prev_base_x * sin_a + d->camera_plane_base.y * cos_a;
 }
 
 static void move_player(game_data_t *d, float dx, float dy)
@@ -68,13 +70,17 @@ static void move_player(game_data_t *d, float dx, float dy)
     if (d->map[(int) (new_x + margin)][(int) (pos_y + margin)] == 0
         && d->map[(int) (new_x + margin)][(int) (pos_y - margin)] == 0
         && d->map[(int) (new_x - margin)][(int) (pos_y + margin)] == 0
-        && d->map[(int) (new_x - margin)][(int) (pos_y - margin)] == 0)
+        && d->map[(int) (new_x - margin)][(int) (pos_y - margin)] == 0) {
         d->player.pos.x = new_x;
+        d->player.has_moved = true;
+    }
     if (d->map[(int) (pos_x + margin)][(int) (new_y + margin)] == 0
         && d->map[(int) (pos_x - margin)][(int) (new_y + margin)] == 0
         && d->map[(int) (pos_x + margin)][(int) (new_y - margin)] == 0
-        && d->map[(int) (pos_x - margin)][(int) (new_y - margin)] == 0)
+        && d->map[(int) (pos_x - margin)][(int) (new_y - margin)] == 0) {
         d->player.pos.y = new_y;
+        d->player.has_moved = true;
+    }
 }
 
 static void handle_camera_movement(game_data_t *d, engine_t *engine)
@@ -130,30 +136,45 @@ static sfVector2f get_player_movement(float dt, game_data_t *d)
     return get_normalized_movement(dt, &dir);
 }
 
-void game_update(engine_t *engine)
+static void handle_speed_modifiers(game_data_t *d, float *speed_mult)
 {
-    game_data_t *d = (game_data_t *) engine->scene->data;
+    d->player.has_moved = false;
+    d->player.is_sprinting = false;
+    d->player.is_crouching = false;
+    if (sfKeyboard_isKeyPressed(sfKeyLShift)) {
+        d->player.is_sprinting = true;
+        *speed_mult = SPRINT_MULT;
+        d->fov = SPRINT_FOV;
+    } else if (sfKeyboard_isKeyPressed(sfKeyLControl)) {
+        d->player.is_crouching = true;
+        *speed_mult = CROUCH_MULT;
+        d->fov = CROUCH_FOV;
+    } else
+        d->fov = DEFAULT_FOV;
+}
+
+static void handle_player(engine_t *engine, game_data_t *d)
+{
     sfVector2f movement = {0};
     float speed_mult = 1;
 
-    if (!d)
-        return;
-#ifdef DEBUG
-    print_framerate();
-#endif
-    if (sfKeyboard_isKeyPressed(sfKeyLShift)) {
-        speed_mult = SPRINT_MULT;
-        d->fov = SPRINT_FOV;
-    } else if (sfKeyboard_isKeyPressed(sfKeyLControl)) {
-        speed_mult = CROUCH_MULT;
-        d->fov = CROUCH_FOV;
-    } else {
-        d->fov = DEFAULT_FOV;
-    }
+    handle_speed_modifiers(d, &speed_mult);
     handle_camera_movement(d, engine);
     d->camera_plane.x = d->camera_plane_base.x * d->fov;
     d->camera_plane.y = d->camera_plane_base.y * d->fov;
     movement = get_player_movement(engine->dt, d);
     if (movement.x != 0 || movement.y != 0)
         move_player(d, movement.x * speed_mult, movement.y * speed_mult);
+}
+
+void game_update(engine_t *engine)
+{
+    game_data_t *d = (game_data_t *) engine->scene->data;
+
+    if (!d)
+        return;
+#ifdef DEBUG
+    print_framerate();
+#endif
+    handle_player(engine, d);
 }

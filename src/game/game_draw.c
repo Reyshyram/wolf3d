@@ -11,12 +11,31 @@
 #include <SFML/Graphics/Sprite.h>
 #include <SFML/Graphics/Types.h>
 #include <SFML/Graphics/VertexArray.h>
+#include <math.h>
 #include <stddef.h>
 
 #include "graphics/engine.h"
 
 #include "game.h"
 #include "wolf3d.h"
+
+static void apply_bobbing(float dt, game_data_t *d)
+{
+    float mult = 1;
+
+    if (d->player.has_moved) {
+        d->bobbing_clock += dt * 10;
+        if (d->player.is_sprinting)
+            mult = SPRINT_MULT;
+        if (d->player.is_crouching)
+            mult = CROUCH_MULT;
+        if (d->player.is_zooming)
+            mult /= 2;
+        d->camera_height += sinf(d->bobbing_clock) / 12 * mult;
+    } else {
+        d->bobbing_clock = 0;
+    }
+}
 
 static void draw_environment(engine_t *engine, game_data_t *d)
 {
@@ -34,6 +53,7 @@ static void draw_environment(engine_t *engine, game_data_t *d)
     sfRenderTexture_drawVertexArray(d->render_texture, d->rays, &states);
     sfRenderTexture_display(d->render_texture);
     sfRenderWindow_setView(engine->window, d->camera);
+    apply_bobbing(engine->dt, d);
     sfSprite_setTexture(sprite, render, true);
     sfRenderWindow_drawSprite(engine->window, sprite, nullptr);
     sfSprite_destroy(sprite);
