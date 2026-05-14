@@ -14,8 +14,7 @@ uniform float u_tile_size;
 uniform float u_floor_index;
 uniform float u_ceil_index;
 
-void main() {
-    vec2 frag = gl_FragCoord.xy;
+vec4 sample_floor_ceil(vec2 frag) {
     float is_ceil = step(frag.y, u_horizon_y);
     float offset_to_horizon = frag.y - u_horizon_y;
     float abs_offset_to_horizon = max(abs(offset_to_horizon), 1.0);
@@ -35,5 +34,14 @@ void main() {
 
     vec2 textures_uv = (vec2(tile_x, tile_y) * u_tile_size + tile_uv * u_tile_size) / u_textures_size;
 
-    gl_FragColor = texture2D(u_textures, textures_uv);
+    return texture2D(u_textures, textures_uv);
+}
+
+void main() {
+    vec2 frag = gl_FragCoord.xy;
+    vec4 color = sample_floor_ceil(frag + vec2(-0.25, -0.25));
+    color += sample_floor_ceil(frag + vec2(0.25, -0.25));
+    color += sample_floor_ceil(frag + vec2(-0.25, 0.25));
+    color += sample_floor_ceil(frag + vec2(0.25, 0.25));
+    gl_FragColor = color * 0.25;
 }
