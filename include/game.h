@@ -47,6 +47,10 @@
 typedef struct {
     sfVector2f pos;
     sfVector2f view_dir;
+    bool has_moved;
+    bool is_sprinting;
+    bool is_crouching;
+    bool is_zooming;
 } player_t;
 
 typedef struct game_s {
@@ -62,6 +66,7 @@ typedef struct game_s {
     sfVector2f camera_plane_base;
     float camera_height;
     float fov;
+    float bobbing_clock;
 } game_data_t;
 
 typedef struct ray_s {

@@ -23,9 +23,13 @@ void game_event(engine_t *engine, sfEvent *event)
     if (event->type == sfEvtKeyPressed && event->key.code == sfKeyEscape)
         sfRenderWindow_close(engine->window);
     if (event->type == sfEvtMouseButtonPressed
-        && event->mouseButton.button == sfMouseRight)
+        && event->mouseButton.button == sfMouseRight) {
+        data->player.is_zooming = true;
         sfView_zoom(data->camera, 1.0F / ZOOM_FACTOR);
+    }
     if (event->type == sfEvtMouseButtonReleased
-        && event->mouseButton.button == sfMouseRight)
+        && event->mouseButton.button == sfMouseRight) {
+        data->player.is_zooming = false;
         sfView_zoom(data->camera, ZOOM_FACTOR);
+    }
 }
