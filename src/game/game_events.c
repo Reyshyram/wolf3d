@@ -6,12 +6,13 @@
 */
 
 #include <SFML/Graphics/RenderWindow.h>
+#include <SFML/Graphics/View.h>
 #include <SFML/Window/Event.h>
 #include <SFML/Window/Keyboard.h>
-
-#include "graphics/engine.h"
+#include <SFML/Window/Mouse.h>
 
 #include "game.h"
+#include "graphics/engine.h"
 
 void game_event(engine_t *engine, sfEvent *event)
 {
@@ -21,4 +22,10 @@ void game_event(engine_t *engine, sfEvent *event)
         return;
     if (event->type == sfEvtKeyPressed && event->key.code == sfKeyEscape)
         sfRenderWindow_close(engine->window);
+    if (event->type == sfEvtMouseButtonPressed
+        && event->mouseButton.button == sfMouseRight)
+        sfView_zoom(data->camera, 1.0F / ZOOM_FACTOR);
+    if (event->type == sfEvtMouseButtonReleased
+        && event->mouseButton.button == sfMouseRight)
+        sfView_zoom(data->camera, ZOOM_FACTOR);
 }

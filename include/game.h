@@ -34,6 +34,7 @@
 
     #define CAMERA_ROT_SPEED 1
     #define CAMERA_HEIGHT_SPEED 1000
+    #define ZOOM_FACTOR 1.5F
 
     #define MOUSE_X_SENSITIVITY 0.002F
     #define MOUSE_Y_SENSITIVITY 2.0F
@@ -46,6 +47,8 @@ typedef struct {
 
 typedef struct game_s {
     int map[MAP_WIDTH][MAP_HEIGHT];
+    sfView *camera;
+    sfRenderTexture *render_texture;
     sfVertexArray *rays;
     sfRectangleShape *floor_ceil;
     sfShader *floor_ceil_shader;
@@ -87,6 +90,6 @@ void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
 
 void cast_wall_ray(game_data_t *d, size_t x);
-void draw_floor_and_ceil(engine_t *engine, game_data_t *d);
+void draw_floor_and_ceil(game_data_t *d);
 
 #endif /* !GAME_H */

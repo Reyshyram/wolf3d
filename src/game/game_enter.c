@@ -7,10 +7,13 @@
 
 #include <SFML/Graphics/Glsl.h>
 #include <SFML/Graphics/PrimitiveType.h>
+#include <SFML/Graphics/Rect.h>
 #include <SFML/Graphics/RectangleShape.h>
+#include <SFML/Graphics/RenderTexture.h>
 #include <SFML/Graphics/RenderWindow.h>
 #include <SFML/Graphics/Shader.h>
 #include <SFML/Graphics/VertexArray.h>
+#include <SFML/Graphics/View.h>
 #include <SFML/System/Vector2.h>
 #include <string.h>
 
@@ -90,4 +93,8 @@ void game_enter(engine_t *engine)
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
+    data->camera =
+        sfView_createFromRect((sfFloatRect) {0, 0, WIN_WIDTH, WIN_HEIGHT});
+    data->render_texture =
+        sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
 }
