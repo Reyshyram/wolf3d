@@ -89,12 +89,15 @@ static void handle_camera_movement(game_data_t *d, engine_t *engine)
     sfVector2i mouse_pos = sfMouse_getPositionRenderWindow(engine->window);
     int mouse_dx = mouse_pos.x - center.x;
     int mouse_dy = mouse_pos.y - center.y;
+    float mult = 1;
 
+    if (d->player.is_zooming)
+        mult *= 0.66F;
     sfMouse_setPositionRenderWindow(center, engine->window);
     if (mouse_dx != 0)
-        rotate_camera(d, -(float) mouse_dx * MOUSE_X_SENSITIVITY);
+        rotate_camera(d, -(float) mouse_dx * MOUSE_X_SENSITIVITY * mult);
     if (mouse_dy != 0)
-        d->camera_height -= (float) mouse_dy * MOUSE_Y_SENSITIVITY;
+        d->camera_height -= (float) mouse_dy * MOUSE_Y_SENSITIVITY * mult;
     if (d->camera_height > (float) WIN_HEIGHT / 2 - 1)
         d->camera_height = (float) WIN_HEIGHT / 2 - 1;
     if (d->camera_height < -(float) WIN_HEIGHT / 2 + 1)
