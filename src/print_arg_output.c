@@ -5,10 +5,11 @@
 ** print_arg_output
 */
 
-#include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
 
-#include "game.h"
+#include "graphics/engine.h"
+
 #include "wolf3d.h"
 
 void printd(char *text, int speed)

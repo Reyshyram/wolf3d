@@ -7,12 +7,10 @@
 
 #include <SFML/Graphics/Glsl.h>
 #include <SFML/Graphics/RenderStates.h>
-#include <SFML/Graphics/RenderWindow.h>
+#include <SFML/Graphics/RenderTexture.h>
 #include <SFML/Graphics/Shader.h>
 #include <SFML/System/Vector2.h>
 #include <math.h>
-
-#include "graphics/engine.h"
 
 #include "game.h"
 #include "wolf3d.h"
@@ -28,7 +26,7 @@ static void set_shader_uniforms(game_data_t *d, sfVector2f *ray_dir_left,
         (sfGlslVec2) {ray_dir_right->x, ray_dir_right->y});
 }
 
-void draw_floor_and_ceil(engine_t *engine, game_data_t *d)
+void draw_floor_and_ceil(game_data_t *d)
 {
     sfRenderStates states = sfRenderStates_default();
     sfVector2f ray_dir_left = {d->player.view_dir.x - d->camera_plane.x,
@@ -45,5 +43,6 @@ void draw_floor_and_ceil(engine_t *engine, game_data_t *d)
         WIN_HEIGHT - horizon_y);
     sfShader_setFloatUniform(d->floor_ceil_shader, "u_plane_dist", plane_dist);
     states.shader = d->floor_ceil_shader;
-    sfRenderWindow_drawRectangleShape(engine->window, d->floor_ceil, &states);
+    sfRenderTexture_drawRectangleShape(d->render_texture, d->floor_ceil,
+        &states);
 }
