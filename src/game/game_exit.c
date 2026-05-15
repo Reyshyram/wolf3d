@@ -29,7 +29,6 @@ void game_exit(engine_t *engine)
     if (data->floor_ceil)
         sfRectangleShape_destroy(data->floor_ceil);
     sfRenderTexture_destroy(data->render_texture);
-    sfView_destroy(data->camera);
     free(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, true);
 }

@@ -94,6 +94,7 @@ static void init_player(game_data_t *data)
     data->camera_plane = (sfVector2f) {0, DEFAULT_FOV};
     data->camera_plane_base = (sfVector2f) {0, 1.0F};
     data->fov = DEFAULT_FOV;
+    data->target_fov = DEFAULT_FOV;
 }
 
 void game_enter(engine_t *engine)
@@ -114,8 +115,6 @@ void game_enter(engine_t *engine)
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
-    data->camera =
-        sfView_createFromRect((sfFloatRect) {0, 0, WIN_WIDTH, WIN_HEIGHT});
     data->render_texture =
         sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
 }

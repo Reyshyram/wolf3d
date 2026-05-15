@@ -11,6 +11,7 @@
 #include <math.h>
 
 #include "graphics/engine.h"
+#include "graphics/maths.h"
 
 #include "game.h"
 #include "wolf3d.h"
@@ -147,13 +148,13 @@ static void handle_speed_modifiers(game_data_t *d, float *speed_mult)
     if (sfKeyboard_isKeyPressed(sfKeyLShift)) {
         d->player.is_sprinting = true;
         *speed_mult = SPRINT_MULT;
-        d->fov = SPRINT_FOV;
+        d->target_fov = SPRINT_FOV;
     } else if (sfKeyboard_isKeyPressed(sfKeyLControl)) {
         d->player.is_crouching = true;
         *speed_mult = CROUCH_MULT;
-        d->fov = CROUCH_FOV;
+        d->target_fov = CROUCH_FOV;
     } else
-        d->fov = DEFAULT_FOV;
+        d->target_fov = DEFAULT_FOV;
 }
 
 static void handle_player(engine_t *engine, game_data_t *d)
@@ -180,4 +181,7 @@ void game_update(engine_t *engine)
     print_framerate();
 #endif
     handle_player(engine, d);
+    d->fov = interpolatef(d->fov,
+        d->target_fov * (d->player.is_zooming ? 1 / ZOOM_FACTOR : 1),
+        engine->dt * 10);
 }
