@@ -55,7 +55,6 @@ typedef struct {
 
 typedef struct game_s {
     int map[MAP_WIDTH][MAP_HEIGHT];
-    sfView *camera;
     sfRenderTexture *render_texture;
     sfVertexArray *rays;
     sfRectangleShape *floor_ceil;
@@ -66,6 +65,7 @@ typedef struct game_s {
     sfVector2f camera_plane_base;
     float camera_height;
     float fov;
+    float target_fov;
     float bobbing_clock;
 } game_data_t;
 

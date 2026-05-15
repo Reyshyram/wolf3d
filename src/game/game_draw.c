@@ -52,13 +52,10 @@ static void draw_environment(engine_t *engine, game_data_t *d)
     states.texture = d->wall_textures;
     sfRenderTexture_drawVertexArray(d->render_texture, d->rays, &states);
     sfRenderTexture_display(d->render_texture);
-    sfRenderWindow_setView(engine->window, d->camera);
     apply_bobbing(engine->dt, d);
     sfSprite_setTexture(sprite, render, true);
     sfRenderWindow_drawSprite(engine->window, sprite, nullptr);
     sfSprite_destroy(sprite);
-    sfRenderWindow_setView(engine->window,
-        sfRenderWindow_getDefaultView(engine->window));
 }
 
 void game_draw(engine_t *engine)
