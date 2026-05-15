@@ -61,6 +61,14 @@ static void draw_environment(engine_t *engine, game_data_t *d)
         sfRenderWindow_getDefaultView(engine->window));
 }
 
+static void draw_vignette(engine_t *engine, game_data_t *d)
+{
+    sfRenderStates states = sfRenderStates_default();
+
+    states.shader = d->vignette_shader;
+    sfRenderWindow_drawRectangleShape(engine->window, d->floor_ceil, &states);
+}
+
 void game_draw(engine_t *engine)
 {
     game_data_t *d = (game_data_t *) engine->scene->data;
@@ -68,4 +76,5 @@ void game_draw(engine_t *engine)
     if (!d)
         return;
     draw_environment(engine, d);
+    draw_vignette(engine, d);
 }
