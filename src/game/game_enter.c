@@ -74,6 +74,19 @@ static void set_up_floor_ceil(game_data_t *data)
         CEIL_TILE_INDEX);
 }
 
+static void init_vignette_shader(game_data_t *data)
+{
+    data->vignette_shader =
+        sfShader_createFromFile(nullptr, nullptr, VIGNETTE_SHADER_PATH);
+    sfShader_setFloatUniform(data->vignette_shader, "u_inner_radius",
+        VIGNETTE_INNER_RADIUS);
+    sfShader_setFloatUniform(data->vignette_shader, "u_outer_radius",
+        VIGNETTE_OUTER_RADIUS);
+    sfShader_setFloatUniform(data->vignette_shader, "u_alpha", VIGNETTE_ALPHA);
+    sfShader_setVec2Uniform(data->vignette_shader, "u_resolution",
+        (sfGlslVec2) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
+}
+
 static void init_player(game_data_t *data)
 {
     data->player.pos = (sfVector2f) {15, 15};
@@ -97,6 +110,7 @@ void game_enter(engine_t *engine)
     data->wall_textures =
         resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
     set_up_floor_ceil(data);
+    init_vignette_shader(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);

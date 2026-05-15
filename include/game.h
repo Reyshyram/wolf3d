@@ -21,6 +21,11 @@
     #define WALL_TEXTURES_PATH SPRITES_PATH "wall_textures.png"
     #define NB_WALL_TEXTURES 8
 
+    #define VIGNETTE_SHADER_PATH SHADERS_PATH "vignette.frag"
+    #define VIGNETTE_INNER_RADIUS 0.85F
+    #define VIGNETTE_OUTER_RADIUS 1.3F
+    #define VIGNETTE_ALPHA 0.5F
+
     #define FLOOR_CEIL_SHADER_PATH SHADERS_PATH "floor_ceil.frag"
     #define FLOOR_TILE_INDEX 3
     #define CEIL_TILE_INDEX 6
@@ -60,6 +65,7 @@ typedef struct game_s {
     sfVertexArray *rays;
     sfRectangleShape *floor_ceil;
     sfShader *floor_ceil_shader;
+    sfShader *vignette_shader;
     sfTexture *wall_textures;
     player_t player;
     sfVector2f camera_plane;
