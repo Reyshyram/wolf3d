@@ -9,7 +9,7 @@
 
 #include "graphics/engine.h"
 
-#include "math.h"
+#include "maths.h"
 #include "game.h"
 #include "wolf3d.h"
 
