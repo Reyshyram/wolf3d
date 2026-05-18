@@ -11,6 +11,7 @@
 
     #include <SFML/Graphics/Types.h>
     #include <SFML/System/Vector2.h>
+    #include <stdlib.h>
 
     #include "graphics/engine.h"
 
@@ -47,6 +48,13 @@
     #define DEFAULT_FOV 0.66F
     #define SPRINT_FOV 0.8F
     #define CROUCH_FOV 0.5F
+
+    #define MINIMAP_TILE_SIZE 2
+    #define MINIMAP_RATIO 3
+    #define RGB_WHITE sfColor_fromRGBA(255, 255, 255, 255)
+    #define RGB_BLACK sfColor_fromRGBA(0, 0, 0, 255)
+    #define RGB_RED sfColor_fromRGBA(255, 0, 0, 255)
+    #define RGB_NONE sfColor_fromRGBA(0, 0, 0, 0)
 // clang-format on
 
 typedef struct {
@@ -57,6 +65,10 @@ typedef struct {
     bool is_crouching;
     bool is_zooming;
 } player_t;
+
+typedef struct hud_s {
+    sfView *mini_map;
+} hud_t;
 
 typedef struct game_s {
     int map[MAP_WIDTH][MAP_HEIGHT];
@@ -73,6 +85,7 @@ typedef struct game_s {
     float fov;
     float target_fov;
     float bobbing_clock;
+    hud_t *hud;
 } game_data_t;
 
 typedef struct ray_s {
@@ -108,5 +121,9 @@ void game_event(engine_t *engine, sfEvent *event);
 
 void cast_wall_ray(game_data_t *d, size_t x);
 void draw_floor_and_ceil(game_data_t *d);
+
+int init_hud(game_data_t *data);
+void free_hud(hud_t *hud);
+void view_mini_map(engine_t *engine, game_data_t *d, hud_t *hud);
 
 #endif /* !GAME_H */
