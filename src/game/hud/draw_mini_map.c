@@ -6,10 +6,10 @@
 */
 
 #include <SFML/Graphics/Color.h>
+#include <math.h>
 
 #include "graphics/engine.h"
 
-#include "maths.h"
 #include "game.h"
 #include "wolf3d.h"
 
@@ -90,8 +90,8 @@ static sfVector2f get_minimap_pos(hud_t *hud, const sfFloatRect *viewport)
 void view_mini_map(engine_t *engine, game_data_t *d, hud_t *hud)
 {
     sfFloatRect viewport = MINIMAP_VIEWPORT;
-    float angle = (atan2f(d->player.view_dir.y, d->player.view_dir.x) * 180)
-        / M_PI;
+    float angle = atan2f(d->player.view_dir.y, d->player.view_dir.x) * 180
+        / (float) M_PI;
     sfVector2f minimap_pos;
 
     draw_minimap_texture(hud, d, angle);
