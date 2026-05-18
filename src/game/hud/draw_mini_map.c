@@ -5,10 +5,11 @@
 ** mini-map
 */
 
-#include "wolf3d.h"
+#include <math.h>
+
 #include "game.h"
 
-void set_cell_color(sfRectangleShape *cell, int tile)
+static void set_cell_color(sfRectangleShape *cell, int tile)
 {
     switch (tile) {
         case 0:
@@ -20,35 +21,32 @@ void set_cell_color(sfRectangleShape *cell, int tile)
     }
 }
 
-void draw_mm_player(engine_t *engine, game_data_t *d)
+static void draw_mm_player(engine_t *engine, game_data_t *d)
 {
     sfCircleShape *player = sfCircleShape_create();
+    float radius = 2 * MINIMAP_RATIO;
+    float cell_size = MINIMAP_TILE_SIZE * MINIMAP_RATIO;
 
-    sfCircleShape_setRadius(player, 2.f * MINIMAP_RATIO);
+    sfCircleShape_setRadius(player, radius);
     sfCircleShape_setFillColor(player, RGB_RED);
-    sfCircleShape_setPosition(player, (sfVector2f)
-        {d->player.pos.y * MINIMAP_TILE_SIZE * MINIMAP_RATIO
-            - 2.f * MINIMAP_RATIO,
-            d->player.pos.x * MINIMAP_TILE_SIZE * MINIMAP_RATIO
-            - 2.f * MINIMAP_RATIO});
+    sfCircleShape_setPosition(player,
+        (sfVector2f) {d->player.pos.x * cell_size - radius,
+            d->player.pos.y * cell_size - radius});
     sfRenderWindow_drawCircleShape(engine->window, player, NULL);
     sfCircleShape_destroy(player);
 }
 
-void draw_mini_map(engine_t *engine, game_data_t *d)
+static void draw_mini_map(engine_t *engine, game_data_t *d)
 {
     sfRectangleShape *cell = sfRectangleShape_create();
+    float cell_size = MINIMAP_TILE_SIZE * MINIMAP_RATIO;
 
-    sfRectangleShape_setSize(cell,
-        (sfVector2f){MINIMAP_TILE_SIZE * MINIMAP_RATIO,
-            MINIMAP_TILE_SIZE * MINIMAP_RATIO});
+    sfRectangleShape_setSize(cell, (sfVector2f) {cell_size, cell_size});
     for (int y = 0; y < MAP_HEIGHT; y++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
-            set_cell_color(cell, d->map[y][x]);
+            set_cell_color(cell, d->map[x][y]);
             sfRectangleShape_setPosition(cell,
-                (sfVector2f){
-                    x * MINIMAP_TILE_SIZE * MINIMAP_RATIO,
-                    y * MINIMAP_TILE_SIZE * MINIMAP_RATIO});
+                (sfVector2f) {(float) x * cell_size, (float) y * cell_size});
             sfRenderWindow_drawRectangleShape(engine->window, cell, NULL);
         }
     }
@@ -57,15 +55,15 @@ void draw_mini_map(engine_t *engine, game_data_t *d)
 
 void view_mini_map(engine_t *engine, game_data_t *d, hud_t *hud)
 {
-    sfView_setCenter(hud->mini_map, (sfVector2f)
-        {(MAP_WIDTH * MINIMAP_TILE_SIZE * MINIMAP_RATIO) / 2.f,
-            (MAP_HEIGHT * MINIMAP_TILE_SIZE * MINIMAP_RATIO) / 2.f});
-    sfView_setSize(hud->mini_map, (sfVector2f)
-        {MAP_WIDTH * MINIMAP_TILE_SIZE * MINIMAP_RATIO,
-            MAP_HEIGHT * MINIMAP_TILE_SIZE * MINIMAP_RATIO});
-    sfView_setRotation(hud->mini_map, 90.f + (90.f * d->player.view_dir.x));
-    sfView_setViewport(hud->mini_map,
-        (sfFloatRect){0.75f, 0.02f, 0.23f, 0.23f});
+    sfVector2f map_size = {MAP_WIDTH * MINIMAP_TILE_SIZE * MINIMAP_RATIO,
+        MAP_HEIGHT * MINIMAP_TILE_SIZE * MINIMAP_RATIO};
+    float angle = atan2pif(d->player.view_dir.y, d->player.view_dir.x) * 180;
+
+    sfView_setCenter(hud->mini_map,
+        (sfVector2f) {map_size.x / 2, map_size.y / 2});
+    sfView_setSize(hud->mini_map, map_size);
+    sfView_setRotation(hud->mini_map, angle + 90);
+    sfView_setViewport(hud->mini_map, MINIMAP_VIEWPORT);
     sfRenderWindow_setView(engine->window, hud->mini_map);
     draw_mini_map(engine, d);
     draw_mm_player(engine, d);

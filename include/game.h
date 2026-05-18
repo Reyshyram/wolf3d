@@ -51,6 +51,7 @@
 
     #define MINIMAP_TILE_SIZE 2
     #define MINIMAP_RATIO 3
+    #define MINIMAP_VIEWPORT (sfFloatRect) {0.75F, 0.05F, 0.25F, 0.25F}
     #define RGB_WHITE sfColor_fromRGBA(255, 255, 255, 255)
     #define RGB_BLACK sfColor_fromRGBA(0, 0, 0, 255)
     #define RGB_RED sfColor_fromRGBA(255, 0, 0, 255)
