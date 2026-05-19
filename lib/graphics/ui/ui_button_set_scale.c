@@ -18,6 +18,6 @@ ui_button_t *ui_button_set_scale(ui_button_t *button, const sfVector2f *scale)
     button->scale = *scale;
     sfRectangleShape_setScale(button->background, button->scale);
     sfText_setCharacterSize(button->text,
-        (unsigned int) button->scale.x * button->char_size);
+        (unsigned int) (button->scale.x * button->char_size));
     return button;
 }

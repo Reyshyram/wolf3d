@@ -23,7 +23,7 @@ ui_button_t *ui_button_set_text(ui_button_t *button, const char *text,
     sfText_setString(button->text, text);
     if (char_size > 0)
         sfText_setCharacterSize(button->text,
-            (unsigned int) button->scale.x * char_size);
+            (unsigned int) (button->scale.x * char_size));
     if (color)
         sfText_setFillColor(button->text, *color);
     text_bounds = sfText_getLocalBounds(button->text);
