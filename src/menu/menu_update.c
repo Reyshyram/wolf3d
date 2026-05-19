@@ -6,11 +6,12 @@
 */
 
 #include <stdlib.h>
-
 #include "graphics/engine.h"
-#include "graphics/ui.h"
 #include "graphics/resources.h"
+#include "menu.h"
+#include "wolf3d.h"
 
-#include "game.h"
-
-
+void menu_update(engine_t *engine)
+{
+    (void)engine;
+}
