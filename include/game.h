@@ -57,6 +57,8 @@
     #define MINIMAP_RATIO 3
     #define MINIMAP_VIEWPORT (sfFloatRect) {0.75F, 0.05F, 0.25F, 0.25F}
     #define MINIMAP_OPACITY 160
+
+    #define TIMER_POS (sfVector2f) {50, 50}
 // clang-format on
 
 typedef struct {
@@ -73,6 +75,8 @@ typedef struct hud_s {
     sfRenderTexture *mini_map_render;
     sfCircleShape *mini_map_shape;
     sfVector2u mini_map_size;
+    sfText *timer;
+    float timer_time;
 } hud_t;
 
 typedef struct game_s {
@@ -127,8 +131,9 @@ void game_event(engine_t *engine, sfEvent *event);
 void cast_wall_ray(game_data_t *d, size_t x);
 void draw_floor_and_ceil(game_data_t *d);
 
-int init_hud(game_data_t *data);
+int init_hud(engine_t *engine, game_data_t *data);
 void free_hud(hud_t *hud);
 void view_mini_map(engine_t *engine, game_data_t *d, hud_t *hud);
+void draw_timer(engine_t *engine, hud_t *hud);
 
 #endif /* !GAME_H */
