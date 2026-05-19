@@ -38,7 +38,7 @@ static bool init_timer(engine_t *engine, hud_t *hud)
     if (!hud->timer_buff || !hud->timer || !hud->clock)
         return false;
     sfText_setFont(hud->timer, sfFont_createFromFile(DEFAULT_FONT));
-    sfText_setCharacterSize(hud->timer, 32);
+    sfText_setCharacterSize(hud->timer, WIN_WIDTH / 33.75);
     sfText_setColor(hud->timer, sfWhite);
     sfText_setStyle(hud->timer, sfTextBold);
     sfText_setPosition(hud->timer, (sfVector2f)

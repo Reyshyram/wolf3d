@@ -14,14 +14,12 @@
 
 void draw_timer(engine_t *engine, hud_t *hud)
 {
-    char *buf = malloc(sizeof(char) * 7);
     float time = sfTime_asMilliseconds(sfClock_getElapsedTime(hud->clock));
     int ms = ((int)time % 1000) / 100;
     int sec = ((int)time / 1000) % 60;
     int min = time / 60000;
 
-    sprintf(buf, "%02d:%02d:%d", min, sec, ms);
-    sfText_setString(hud->timer, buf);
+    sprintf(hud->timer_buff, "%02d:%02d:%d", min, sec, ms);
+    sfText_setString(hud->timer, hud->timer_buff);
     sfRenderWindow_drawText(engine->window, hud->timer, NULL);
-    free(buf);
 }
