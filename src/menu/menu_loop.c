@@ -13,6 +13,8 @@
 
 void handle_menu_events(engine_t *engine, sfEvent *event)
 {
-    (void)engine;
-    (void)event;
+    menu_data_t *data = engine->scene->data;
+
+    ui_button_events(data->play_btn, event, engine);
+    ui_button_events(data->exit_btn, event, engine);
 }

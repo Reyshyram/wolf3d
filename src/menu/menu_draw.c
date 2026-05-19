@@ -17,4 +17,8 @@ void menu_draw(engine_t *engine)
 
     sfRenderWindow_drawSprite(engine->window, data->bg, NULL);
     sfRenderWindow_drawSprite(engine->window, data->logo, NULL);
+    sfRenderWindow_drawRectangleShape(engine->window,
+        data->play_btn->background, NULL);
+    sfRenderWindow_drawRectangleShape(engine->window,
+        data->exit_btn->background, NULL);
 }

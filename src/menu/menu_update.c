@@ -13,5 +13,8 @@
 
 void menu_update(engine_t *engine)
 {
-    (void)engine;
+    menu_data_t *data = engine->scene->data;
+
+    ui_button_update(engine, data->play_btn);
+    ui_button_update(engine, data->exit_btn);
 }
