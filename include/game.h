@@ -59,9 +59,12 @@
     #define MINIMAP_OPACITY 160
 
     #define TIMER_POS (sfVector2f) {50, 50}
+
+    #define STEPS_SOUND SFXS_PATHS "player/steps.mp3"
 // clang-format on
 
 typedef struct {
+    sfSound *steps;
     sfVector2f pos;
     sfVector2f view_dir;
     bool has_moved;
