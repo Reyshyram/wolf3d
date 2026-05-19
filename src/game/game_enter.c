@@ -5,6 +5,7 @@
 ** Initialize the game scene
 */
 
+#include <SFML/Audio/Sound.h>
 #include <SFML/Graphics/Glsl.h>
 #include <SFML/Graphics/PrimitiveType.h>
 #include <SFML/Graphics/Rect.h>
@@ -92,7 +93,7 @@ static void init_vignette_shader(game_data_t *data)
         (sfGlslVec2) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
 }
 
-static void init_player(game_data_t *data)
+static void init_player(engine_t *engine, game_data_t *data)
 {
     data->player.pos = (sfVector2f) {15, 15};
     data->player.view_dir = (sfVector2f) {-1, 0};
@@ -100,6 +101,8 @@ static void init_player(game_data_t *data)
     data->camera_plane_base = (sfVector2f) {0, 1.0F};
     data->fov = DEFAULT_FOV;
     data->target_fov = DEFAULT_FOV;
+    data->player.steps = resources_load_sound(engine->resources, STEPS_SOUND);
+    sfSound_setLoop(data->player.steps, true);
 }
 
 void game_enter(engine_t *engine)
@@ -109,7 +112,7 @@ void game_enter(engine_t *engine)
     if (!data)
         return;
     memcpy(data->map, WORLD_MAP, sizeof(data->map));
-    init_player(data);
+    init_player(engine, data);
     data->rays = sfVertexArray_create();
     sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
     sfVertexArray_setPrimitiveType(data->rays, sfLines);
