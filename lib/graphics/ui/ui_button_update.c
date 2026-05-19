@@ -17,15 +17,17 @@
 
 static void update_bg_scale(const engine_t *engine, ui_button_t *button)
 {
-    float target_scale = button->scale.x;
+    sfVector2f target_scale = button->scale;
     sfVector2f original_scale = sfRectangleShape_getScale(button->background);
     sfVector2f new_scale;
 
-    if (button->hovered)
-        target_scale *= 1.1F;
+    if (button->hovered) {
+        target_scale.x *= 1.1F;
+        target_scale.y *= 1.1F;
+    }
     new_scale = (sfVector2f) {
-        interpolatef(original_scale.x, target_scale, engine->dt * 8),
-        interpolatef(original_scale.y, target_scale, engine->dt * 8)};
+        interpolatef(original_scale.x, target_scale.x, engine->dt * 8),
+        interpolatef(original_scale.y, target_scale.y, engine->dt * 8)};
     sfRectangleShape_setScale(button->background, new_scale);
 }
 
