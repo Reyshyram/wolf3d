@@ -184,4 +184,5 @@ void game_update(engine_t *engine)
     d->fov = interpolatef(d->fov,
         d->target_fov * (d->player.is_zooming ? 1 / ZOOM_FACTOR : 1),
         engine->dt * 10);
+    d->hud->timer_time += engine->dt;
 }

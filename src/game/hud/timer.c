@@ -5,21 +5,21 @@
 ** timer
 */
 
+#include <stdio.h>
+
 #include "graphics/engine.h"
 
 #include "game.h"
-#include "wolf3d.h"
-
-#include <stdio.h>
 
 void draw_timer(engine_t *engine, hud_t *hud)
 {
-    float time = sfTime_asMilliseconds(sfClock_getElapsedTime(hud->clock));
-    int ms = ((int)time % 1000) / 100;
-    int sec = ((int)time / 1000) % 60;
-    int min = time / 60000;
+    char buf[16];
+    float time = hud->timer_time * 1000;
+    int cs = ((int) time % 1000) / 10;
+    int sec = ((int) time / 1000) % 60;
+    int min = (int) time / 60000;
 
-    sprintf(hud->timer_buff, "%02d:%02d:%d", min, sec, ms);
-    sfText_setString(hud->timer, hud->timer_buff);
+    snprintf(buf, sizeof(buf), "%02d:%02d.%02d", min, sec, cs);
+    sfText_setString(hud->timer, buf);
     sfRenderWindow_drawText(engine->window, hud->timer, NULL);
 }

@@ -9,6 +9,8 @@
 #include <string.h>
 
 #include "game.h"
+#include "graphics/engine.h"
+#include "graphics/resources.h"
 #include "wolf3d.h"
 
 static bool init_minimap(hud_t *hud, unsigned int mini_map_size)
@@ -32,17 +34,14 @@ static bool init_minimap(hud_t *hud, unsigned int mini_map_size)
 
 static bool init_timer(engine_t *engine, hud_t *hud)
 {
-    hud->clock = sfClock_create();
     hud->timer = sfText_create();
-    hud->timer_buff = malloc(sizeof(char) * 7);
-    if (!hud->timer_buff || !hud->timer || !hud->clock)
+    if (!hud->timer)
         return false;
-    sfText_setFont(hud->timer, sfFont_createFromFile(DEFAULT_FONT));
+    sfText_setFont(hud->timer, engine->default_font);
     sfText_setCharacterSize(hud->timer, WIN_WIDTH / 33.75);
     sfText_setColor(hud->timer, sfWhite);
     sfText_setStyle(hud->timer, sfTextBold);
-    sfText_setPosition(hud->timer, (sfVector2f)
-        {engine->window_size.x / 15, engine->window_size.y / 15});
+    sfText_setPosition(hud->timer, TIMER_POS);
     return true;
 }
 
