@@ -17,10 +17,13 @@ void init_sprites(engine_t *engine, menu_data_t *data)
         "assets/sprites/main_menu/background.png");
     sfTexture *texture_logo = resources_load_texture(engine->resources,
         "assets/sprites/main_menu/logo.png");
+    sfVector2u bg_size = sfTexture_getSize(texture_bg);
     sfFloatRect bounds;
 
     data->bg = sfSprite_create();
     sfSprite_setTexture(data->bg, texture_bg, sfTrue);
+    sfSprite_setScale(data->bg, (sfVector2f){(float)WIN_WIDTH /
+            (float)bg_size.x, (float)WIN_HEIGHT / (float)bg_size.y});
     data->logo = sfSprite_create();
     sfSprite_setTexture(data->logo, texture_logo, sfTrue);
     bounds = sfSprite_getLocalBounds(data->logo);
