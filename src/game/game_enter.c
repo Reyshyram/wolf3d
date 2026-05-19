@@ -117,6 +117,6 @@ void game_enter(engine_t *engine)
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
     data->render_texture =
         sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
-    if (init_hud(data) == ERROR)
+    if (init_hud(engine, data) == ERROR)
         return;
 }

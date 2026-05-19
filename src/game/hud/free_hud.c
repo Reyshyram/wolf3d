@@ -17,5 +17,11 @@ void free_hud(hud_t *hud)
         sfRenderTexture_destroy(hud->mini_map_render);
     if (hud->mini_map)
         sfView_destroy(hud->mini_map);
+    if (hud->timer_buff)
+        free(hud->timer_buff);
+    if (hud->clock)
+        sfClock_destroy(hud->clock);
+    if (hud->timer)
+        sfText_destroy(hud->timer);
     free(hud);
 }

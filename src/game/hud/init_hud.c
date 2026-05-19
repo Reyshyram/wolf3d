@@ -30,7 +30,23 @@ static bool init_minimap(hud_t *hud, unsigned int mini_map_size)
     return true;
 }
 
-int init_hud(game_data_t *data)
+static bool init_timer(engine_t *engine, hud_t *hud)
+{
+    hud->clock = sfClock_create();
+    hud->timer = sfText_create();
+    hud->timer_buff = malloc(sizeof(char) * 7);
+    if (!hud->timer_buff || !hud->timer || !hud->clock)
+        return false;
+    sfText_setFont(hud->timer, sfFont_createFromFile(DEFAULT_FONT));
+    sfText_setCharacterSize(hud->timer, 32);
+    sfText_setColor(hud->timer, sfWhite);
+    sfText_setStyle(hud->timer, sfTextBold);
+    sfText_setPosition(hud->timer, (sfVector2f)
+        {engine->window_size.x / 15, engine->window_size.y / 15});
+    return true;
+}
+
+int init_hud(engine_t *engine, game_data_t *data)
 {
     sfFloatRect viewport = MINIMAP_VIEWPORT;
     float view_width = (float) WIN_WIDTH * viewport.width;
@@ -42,7 +58,8 @@ int init_hud(game_data_t *data)
     if (!data->hud)
         return ERROR;
     memset(data->hud, 0, sizeof(*data->hud));
-    if (!init_minimap(data->hud, mini_map_size)) {
+    if (!init_minimap(data->hud, mini_map_size)
+        || !init_timer(engine, data->hud)) {
         free_hud(data->hud);
         data->hud = nullptr;
         return ERROR;
