@@ -24,6 +24,8 @@ static void set_shader_uniforms(game_data_t *d, sfVector2f *ray_dir_left,
         (sfGlslVec2) {ray_dir_left->x, ray_dir_left->y});
     sfShader_setVec2Uniform(d->floor_ceil_shader, "u_ray_dir_right",
         (sfGlslVec2) {ray_dir_right->x, ray_dir_right->y});
+    sfShader_setVec2Uniform(d->floor_ceil_shader, "u_flashlight_dir",
+        (sfGlslVec2) {d->player.view_dir.x, d->player.view_dir.y});
 }
 
 void draw_floor_and_ceil(game_data_t *d)
@@ -42,6 +44,8 @@ void draw_floor_and_ceil(game_data_t *d)
     sfShader_setFloatUniform(d->floor_ceil_shader, "u_horizon_y",
         WIN_HEIGHT - horizon_y);
     sfShader_setFloatUniform(d->floor_ceil_shader, "u_plane_dist", plane_dist);
+    sfShader_setFloatUniform(d->floor_ceil_shader, "u_flashlight_enabled",
+        ENABLE_FLASHLIGHT);
     states.shader = d->floor_ceil_shader;
     sfRenderTexture_drawRectangleShape(d->render_texture, d->floor_ceil,
         &states);

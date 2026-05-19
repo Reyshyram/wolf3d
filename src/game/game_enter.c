@@ -12,6 +12,7 @@
 #include <SFML/Graphics/RenderTexture.h>
 #include <SFML/Graphics/RenderWindow.h>
 #include <SFML/Graphics/Shader.h>
+#include <SFML/Graphics/Types.h>
 #include <SFML/Graphics/VertexArray.h>
 #include <SFML/Graphics/View.h>
 #include <SFML/System/Vector2.h>
@@ -50,28 +51,32 @@ static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
-static void set_up_floor_ceil(game_data_t *data)
+static void set_up_floor_ceil_shader(game_data_t *data, sfShader *s)
 {
-    sfVector2u textures_size = {NB_WALL_TEXTURES * WALL_TEXTURE_WIDTH,
+    sfGlslVec2 textures_size = {NB_WALL_TEXTURES * WALL_TEXTURE_WIDTH,
         WALL_TEXTURE_HEIGHT};
 
+    sfShader_setTextureUniform(s, "u_textures", data->wall_textures);
+    sfShader_setVec2Uniform(s, "u_resolution",
+        (sfGlslVec2) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
+    sfShader_setVec2Uniform(s, "u_textures_size", textures_size);
+    sfShader_setFloatUniform(s, "u_tile_size", (float) WALL_TEXTURE_WIDTH);
+    sfShader_setFloatUniform(s, "u_floor_index", FLOOR_TILE_INDEX);
+    sfShader_setFloatUniform(s, "u_ceil_index", CEIL_TILE_INDEX);
+    sfShader_setFloatUniform(s, "u_flashlight_enabled", ENABLE_FLASHLIGHT);
+    sfShader_setFloatUniform(s, "u_flashlight_range", FLASHLIGHT_RANGE);
+    sfShader_setFloatUniform(s, "u_flashlight_min_light",
+        FLASHLIGHT_MIN_LIGHT);
+}
+
+static void set_up_floor_ceil(game_data_t *data)
+{
     data->floor_ceil_shader =
         sfShader_createFromFile(nullptr, nullptr, FLOOR_CEIL_SHADER_PATH);
     data->floor_ceil = sfRectangleShape_create();
     sfRectangleShape_setSize(data->floor_ceil,
-        (sfVector2f) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
-    sfShader_setTextureUniform(data->floor_ceil_shader, "u_textures",
-        data->wall_textures);
-    sfShader_setVec2Uniform(data->floor_ceil_shader, "u_resolution",
-        (sfGlslVec2) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
-    sfShader_setVec2Uniform(data->floor_ceil_shader, "u_textures_size",
-        (sfGlslVec2) {(float) textures_size.x, (float) textures_size.y});
-    sfShader_setFloatUniform(data->floor_ceil_shader, "u_tile_size",
-        (float) WALL_TEXTURE_WIDTH);
-    sfShader_setFloatUniform(data->floor_ceil_shader, "u_floor_index",
-        FLOOR_TILE_INDEX);
-    sfShader_setFloatUniform(data->floor_ceil_shader, "u_ceil_index",
-        CEIL_TILE_INDEX);
+        (sfVector2f) {WIN_WIDTH, WIN_HEIGHT});
+    set_up_floor_ceil_shader(data, data->floor_ceil_shader);
 }
 
 static void init_vignette_shader(game_data_t *data)
@@ -117,4 +122,6 @@ void game_enter(engine_t *engine)
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
     data->render_texture =
         sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
+    if (init_hud(engine, data) == ERROR)
+        return;
 }

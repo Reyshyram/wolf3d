@@ -155,6 +155,8 @@ static void handle_speed_modifiers(game_data_t *d, float *speed_mult)
         d->target_fov = CROUCH_FOV;
     } else
         d->target_fov = DEFAULT_FOV;
+    if (d->player.is_zooming)
+        *speed_mult /= 2;
 }
 
 static void handle_player(engine_t *engine, game_data_t *d)
@@ -184,4 +186,5 @@ void game_update(engine_t *engine)
     d->fov = interpolatef(d->fov,
         d->target_fov * (d->player.is_zooming ? 1 / ZOOM_FACTOR : 1),
         engine->dt * 10);
+    d->hud->timer_time += engine->dt;
 }
