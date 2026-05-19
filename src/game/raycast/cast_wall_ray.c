@@ -81,6 +81,21 @@ static void get_ray_perpendicular_dist(ray_t *ray, game_data_t *d)
 }
 
 // clang-format off
+static float get_flashlight_mult(game_data_t *d, ray_t *ray)
+{
+    float ray_len = hypotf(ray->ray_dir.x, ray->ray_dir.y);
+    float view_alignement = fmaxf((ray->ray_dir.x * d->player.view_dir.x
+            + ray->ray_dir.y * d->player.view_dir.y)
+            / ray_len, 0);
+    float distance = ray->perpendicular_dist;
+    float fade = 1.0F / (1.0F
+            + (distance * distance) / (FLASHLIGHT_RANGE * FLASHLIGHT_RANGE));
+    float light = FLASHLIGHT_MIN_LIGHT
+        + (1.0F - FLASHLIGHT_MIN_LIGHT) * view_alignement * fade;
+
+    return fminf(light, 1);
+}
+
 static void get_wall_info(ray_t *ray, game_data_t *d)
 {
     ray->camera_plane_length = hypotf(d->camera_plane.x, d->camera_plane.y);
@@ -103,6 +118,8 @@ static void get_wall_info(ray_t *ray, game_data_t *d)
 
 static void get_ray_texture(ray_t *ray, game_data_t *d)
 {
+    float flashlight_mult = 1;
+
     ray->wall_texture_ind = d->map[ray->map_tile.x][ray->map_tile.y] - 1;
     ray->texture_x = (float) ray->wall_texture_ind * (float) WALL_TEXTURE_WIDTH
         + ray->wall_hit_coord * (float) WALL_TEXTURE_WIDTH;
@@ -116,6 +133,10 @@ static void get_ray_texture(ray_t *ray, game_data_t *d)
         ray->tint.g /= 2;
         ray->tint.b /= 2;
     }
+    flashlight_mult = ENABLE_FLASHLIGHT ? get_flashlight_mult(d, ray) : 1;
+    ray->tint.r = (sfUint8) ((float) ray->tint.r * flashlight_mult);
+    ray->tint.g = (sfUint8) ((float) ray->tint.g * flashlight_mult);
+    ray->tint.b = (sfUint8) ((float) ray->tint.b * flashlight_mult);
 }
 // clang-format on
 

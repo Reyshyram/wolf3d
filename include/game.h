@@ -11,6 +11,7 @@
 
     #include <SFML/Graphics/Types.h>
     #include <SFML/System/Vector2.h>
+    #include <stdlib.h>
 
     #include "graphics/engine.h"
 
@@ -30,6 +31,10 @@
     #define FLOOR_TILE_INDEX 3
     #define CEIL_TILE_INDEX 6
 
+    #define ENABLE_FLASHLIGHT true
+    #define FLASHLIGHT_RANGE 2
+    #define FLASHLIGHT_MIN_LIGHT 0
+
     #define WALL_HEIGHT_MULT 1
 
     #define MOVE_SPEED 5
@@ -47,6 +52,13 @@
     #define DEFAULT_FOV 0.66F
     #define SPRINT_FOV 0.8F
     #define CROUCH_FOV 0.5F
+
+    #define MINIMAP_TILE_SIZE 2
+    #define MINIMAP_RATIO 3
+    #define MINIMAP_VIEWPORT (sfFloatRect) {0.75F, 0.05F, 0.25F, 0.25F}
+    #define MINIMAP_OPACITY 160
+
+    #define TIMER_POS (sfVector2f) {50, 50}
 // clang-format on
 
 typedef struct {
@@ -57,6 +69,15 @@ typedef struct {
     bool is_crouching;
     bool is_zooming;
 } player_t;
+
+typedef struct hud_s {
+    sfView *mini_map;
+    sfRenderTexture *mini_map_render;
+    sfCircleShape *mini_map_shape;
+    sfVector2u mini_map_size;
+    sfText *timer;
+    float timer_time;
+} hud_t;
 
 typedef struct game_s {
     int map[MAP_WIDTH][MAP_HEIGHT];
@@ -73,6 +94,7 @@ typedef struct game_s {
     float fov;
     float target_fov;
     float bobbing_clock;
+    hud_t *hud;
 } game_data_t;
 
 typedef struct ray_s {
@@ -108,5 +130,10 @@ void game_event(engine_t *engine, sfEvent *event);
 
 void cast_wall_ray(game_data_t *d, size_t x);
 void draw_floor_and_ceil(game_data_t *d);
+
+int init_hud(engine_t *engine, game_data_t *data);
+void free_hud(hud_t *hud);
+void view_mini_map(engine_t *engine, game_data_t *d, hud_t *hud);
+void draw_timer(engine_t *engine, hud_t *hud);
 
 #endif /* !GAME_H */
