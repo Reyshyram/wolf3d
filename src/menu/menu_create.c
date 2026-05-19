@@ -13,9 +13,12 @@
 
 void init_buttons(engine_t *engine, menu_data_t *data)
 {
-    sfVector2f pos_p = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F + 50.0F};
-    sfVector2f pos_e = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F + 150.0F};
-    sfVector2f size = {250.0F, 60.0F};
+    sfVector2u text_size = sfTexture_getSize(resources_load_texture(
+            engine->resources, "assets/sprites/main_menu/button_play.png"));
+    sfVector2f size = {350.0F, 350.0F * (float)text_size.y
+        / (float)text_size.x};
+    sfVector2f pos_p = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F - 20.0F};
+    sfVector2f pos_e = {WIN_WIDTH / 2.0F, pos_p.y + size.y + 40.0F};
 
     data->play_btn = ui_button_create(engine,
         "assets/sprites/main_menu/button_play.png", &pos_p, &size);
