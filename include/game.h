@@ -31,6 +31,10 @@
     #define FLOOR_TILE_INDEX 3
     #define CEIL_TILE_INDEX 6
 
+    #define ENABLE_FLASHLIGHT true
+    #define FLASHLIGHT_RANGE 2
+    #define FLASHLIGHT_MIN_LIGHT 0
+
     #define WALL_HEIGHT_MULT 1
 
     #define MOVE_SPEED 5

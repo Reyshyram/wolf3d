@@ -13,8 +13,30 @@ uniform vec2 u_textures_size;
 uniform float u_tile_size;
 uniform float u_floor_index;
 uniform float u_ceil_index;
+uniform float u_flashlight_enabled;
+uniform vec2 u_flashlight_dir;
+uniform float u_flashlight_range;
+uniform float u_flashlight_min_light;
 
-vec4 sample_floor_ceil(vec2 frag) {
+float flashlight_mult(vec2 world_pos)
+{
+    if (u_flashlight_enabled < 0.5)
+        return 1.0;
+
+    vec2 diff_player = world_pos - u_player_pos;
+    float dist = length(diff_player);
+
+    vec2 diff_player_dir = normalize(diff_player);
+    vec2 flashlight_dir = normalize(u_flashlight_dir);
+    float view_alignement = max(dot(diff_player_dir, flashlight_dir), 0.0);
+    float fade = 1.0
+        / (1.0 + (dist * dist) / (u_flashlight_range * u_flashlight_range));
+
+    return mix(u_flashlight_min_light, 1.0, view_alignement * fade);
+}
+
+vec4 sample_floor_ceil(vec2 frag)
+{
     float is_ceil = step(frag.y, u_horizon_y);
     float offset_to_horizon = frag.y - u_horizon_y;
     float abs_offset_to_horizon = max(abs(offset_to_horizon), 1.0);
@@ -32,12 +54,17 @@ vec4 sample_floor_ceil(vec2 frag) {
     float tile_x = mod(tile_index, tiles_per_row);
     float tile_y = floor(tile_index / tiles_per_row);
 
-    vec2 textures_uv = (vec2(tile_x, tile_y) * u_tile_size + tile_uv * u_tile_size) / u_textures_size;
+    vec2 textures_uv =
+        (vec2(tile_x, tile_y) * u_tile_size + tile_uv * u_tile_size)
+        / u_textures_size;
+    vec4 color = texture2D(u_textures, textures_uv);
 
-    return texture2D(u_textures, textures_uv);
+    color.rgb *= flashlight_mult(world_pos);
+    return color;
 }
 
-void main() {
+void main()
+{
     vec2 frag = gl_FragCoord.xy;
     vec4 color = sample_floor_ceil(frag + vec2(-0.25, -0.25));
     color += sample_floor_ceil(frag + vec2(0.25, -0.25));
