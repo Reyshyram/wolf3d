@@ -155,6 +155,8 @@ static void handle_speed_modifiers(game_data_t *d, float *speed_mult)
         d->target_fov = CROUCH_FOV;
     } else
         d->target_fov = DEFAULT_FOV;
+    if (d->player.is_zooming)
+        *speed_mult /= 2;
 }
 
 static void handle_player(engine_t *engine, game_data_t *d)
