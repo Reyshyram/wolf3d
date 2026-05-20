@@ -22,8 +22,8 @@
 #include "graphics/engine.h"
 #include "graphics/resources.h"
 
-#include "menu.h"
 #include "game.h"
+#include "menu.h"
 #include "wolf3d.h"
 
 static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {

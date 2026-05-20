@@ -17,7 +17,7 @@
 void init_buttons(engine_t *engine, menu_data_t *data)
 {
     sfVector2u text_size = sfTexture_getSize(resources_load_texture(
-        engine->resources, "assets/sprites/main_menu/button_play.png"));
+            engine->resources, "assets/sprites/main_menu/button_play.png"));
     sfVector2f size = {350.0F,
         350.0F * (float) text_size.y / (float) text_size.x};
     sfVector2f pos_p = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F - 20.0F};
