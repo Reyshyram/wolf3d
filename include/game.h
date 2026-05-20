@@ -67,8 +67,7 @@
 
     #define STEPS_SOUND SFXS_PATHS "player/steps.mp3"
 
-    #define NORMAL_BOBBING 1611.94F
-    #define DEBUG_BOBBING 67.5F
+    #define NORMAL_BOBBING 3840.0F
 
     #define CURSOR_PATH SPRITES_PATH "cursor.png"
     #define HUD_FONT_PATH FONTS_PATH "old_stamper.ttf"

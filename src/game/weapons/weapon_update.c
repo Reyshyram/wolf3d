@@ -30,14 +30,14 @@ static void update_timers(weapon_t *w, float dt)
     }
 }
 
-static void update_recoil(game_data_t *d, float dt)
+static void update_recoil(engine_t *engine, game_data_t *d, float dt)
 {
     d->camera_height += d->recoil_vel * dt;
     d->recoil_vel *= (1.0F - RECOIL_SPEED * dt);
-    if (d->camera_height > (float) WIN_HEIGHT / 2 - 1)
-        d->camera_height = (float) WIN_HEIGHT / 2 - 1;
-    if (d->camera_height < -(float) WIN_HEIGHT / 2 + 1)
-        d->camera_height = -(float) WIN_HEIGHT / 2 + 1;
+    if (d->camera_height > (float) engine->window_size.y / 2 - 1)
+        d->camera_height = (float) engine->window_size.y / 2 - 1;
+    if (d->camera_height < -(float) engine->window_size.y / 2 + 1)
+        d->camera_height = -(float) engine->window_size.y / 2 + 1;
 }
 
 void update_weapons(engine_t *engine, game_data_t *d)
@@ -46,7 +46,7 @@ void update_weapons(engine_t *engine, game_data_t *d)
 
     for (size_t i = 0; i < WEAPON_SLOT_COUNT; i++)
         update_timers(&d->weapons[i], engine->dt);
-    update_recoil(d, engine->dt);
+    update_recoil(engine, d, engine->dt);
     if (w->ammo == 0 && !w->is_reloading && w->type != WEAPON_GRENADE)
         weapon_reload(d);
     if (sfMouse_isButtonPressed(sfMouseLeft)

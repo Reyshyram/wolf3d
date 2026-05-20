@@ -15,6 +15,7 @@
 #include "graphics/engine.h"
 
 #include "game.h"
+#include "weapons.h"
 
 static void resize_render(game_data_t *d, unsigned int w, unsigned int h)
 {
@@ -41,6 +42,7 @@ void game_on_resize(engine_t *engine)
     free_hud(d->hud);
     init_hud(engine, d);
     d->hud->timer_time = timer;
+    resize_weapons(engine, d);
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow((sfVector2i) {(int) w / 2, (int) h / 2},
         engine->window);

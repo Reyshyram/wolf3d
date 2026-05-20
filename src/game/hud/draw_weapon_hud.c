@@ -28,6 +28,7 @@ static void draw_cursor(engine_t *engine, hud_t *hud)
     sfRenderWindow_drawSprite(engine->window, hud->cursor->sprite, nullptr);
 }
 
+// clang-format off
 static void get_layout(engine_t *engine, weapon_t *weapon,
     hud_layout_t *layout)
 {
@@ -37,9 +38,11 @@ static void get_layout(engine_t *engine, weapon_t *weapon,
 
     layout->scale = scale;
     layout->bounds = sfSprite_getGlobalBounds(weapon->ui_sprite);
-    layout->pos = (sfVector2f) {WIN_WIDTH - x - layout->bounds.width / 2.0F,
-        WIN_HEIGHT - y - layout->bounds.height / 2.0F};
+    layout->pos = (sfVector2f) {(float) engine->window_size.x - x
+        - layout->bounds.width / 2.0F,
+        (float) engine->window_size.y - y - layout->bounds.height / 2.0F};
 }
+// clang-format on
 
 static void update_ammo_text(hud_t *hud, weapon_t *w)
 {

@@ -25,22 +25,23 @@ static sfVector2f get_shoot_offset(weapon_t *w)
     return (sfVector2f) {offset * SHOOT_OFFSET_X, offset * SHOOT_OFFSET_Y};
 }
 
-static float get_reload_offset(weapon_t *w)
+static float get_reload_offset(engine_t *engine, weapon_t *w)
 {
     if (!w->is_reloading)
         return 0;
     if (w->reload_timer < RELOAD_ANIM_TIME)
-        return (w->reload_timer / RELOAD_ANIM_TIME) * (float) WIN_HEIGHT / 2;
+        return (w->reload_timer / RELOAD_ANIM_TIME)
+            * (float) engine->window_size.y / 2;
     if (w->reload_timer > w->weapon_data->reload_time - RELOAD_ANIM_TIME)
         return (w->weapon_data->reload_time - w->reload_timer)
-            / RELOAD_ANIM_TIME * (float) WIN_HEIGHT / 2;
-    return (float) WIN_HEIGHT / 2;
+            / RELOAD_ANIM_TIME * (float) engine->window_size.y / 2;
+    return (float) engine->window_size.y / 2;
 }
 
 static sfVector2f get_held_pos(engine_t *engine, weapon_t *w)
 {
     sfVector2f offset = get_shoot_offset(w);
-    float reload_offset = get_reload_offset(w);
+    float reload_offset = get_reload_offset(engine, w);
 
     return (sfVector2f) {WEAPON_POS_X + offset.x,
         WEAPON_POS_Y + offset.y + reload_offset};

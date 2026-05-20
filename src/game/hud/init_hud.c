@@ -115,8 +115,8 @@ int init_hud(engine_t *engine, game_data_t *data)
         return ERROR;
     memset(data->hud, 0, sizeof(*data->hud));
     if (!init_minimap(data->hud, mini_map_size)
-        || !init_ammo_texts(engine, data->hud) || !init_timer(engine, data->hud)
-        || !init_cursor(engine, data->hud)
+        || !init_ammo_texts(engine, data->hud)
+        || !init_timer(engine, data->hud) || !init_cursor(engine, data->hud)
         || !init_ammo_sprite(engine, data->hud)) {
         free_hud(data->hud);
         data->hud = nullptr;

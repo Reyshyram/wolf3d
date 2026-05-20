@@ -115,8 +115,8 @@ static void init_rendering(engine_t *engine, game_data_t *data)
     sfVertexArray_setPrimitiveType(data->rays, sfLines);
     data->wall_textures =
         resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
-    data->render_texture =
-        sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
+    data->render_texture = sfRenderTexture_create(engine->window_size.x,
+        engine->window_size.y, false);
     set_up_floor_ceil(engine, data);
     init_vignette_shader(engine, data);
 }
