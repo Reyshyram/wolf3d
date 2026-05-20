@@ -31,7 +31,12 @@ static void apply_bobbing(float dt, game_data_t *d)
             mult = CROUCH_MULT;
         if (d->player.is_zooming)
             mult /= 2;
+#ifdef DEBUG
         d->camera_height += sinf(d->bobbing_clock) / 16 * mult;
+#endif
+#ifndef DEBUG
+        d->camera_height += sinf(d->bobbing_clock) * 1.5 * mult;
+#endif
     } else {
         d->bobbing_clock = 0;
     }

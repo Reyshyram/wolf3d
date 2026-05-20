@@ -86,10 +86,10 @@ static float get_flashlight_mult(game_data_t *d, ray_t *ray)
     float ray_len = hypotf(ray->ray_dir.x, ray->ray_dir.y);
     float view_alignement = fmaxf((ray->ray_dir.x * d->player.view_dir.x
             + ray->ray_dir.y * d->player.view_dir.y)
-            / ray_len, 0);
+        / ray_len, 0);
     float distance = ray->perpendicular_dist;
     float fade = 1.0F / (1.0F
-            + (distance * distance) / (FLASHLIGHT_RANGE * FLASHLIGHT_RANGE));
+        + (distance * distance) / (FLASHLIGHT_RANGE * FLASHLIGHT_RANGE));
     float light = FLASHLIGHT_MIN_LIGHT
         + (1.0F - FLASHLIGHT_MIN_LIGHT) * view_alignement * fade;
 
