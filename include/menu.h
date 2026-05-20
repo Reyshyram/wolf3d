@@ -5,12 +5,13 @@
 ** menu
 */
 
+// clang-format off
 #ifndef MENU_H_
     #define MENU_H_
 
     #include "graphics/engine.h"
     #include "graphics/ui.h"
-    #include "game.h"
+// clang-format on
 
 typedef struct menu_data {
     sfSprite *bg;
@@ -31,6 +32,9 @@ typedef struct pause_menu {
 } pause_menu_t;
 
 // Main_menu
+
+typedef struct game_s game_data_t;
+
 scene_t *menu_create(void);
 void menu_on_enter(engine_t *engine);
 void menu_update(engine_t *engine);
