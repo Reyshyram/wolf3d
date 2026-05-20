@@ -11,6 +11,7 @@
 #include <SFML/Window/Keyboard.h>
 #include <SFML/Window/Mouse.h>
 
+#include "menu.h"
 #include "game.h"
 #include "graphics/engine.h"
 
@@ -20,8 +21,15 @@ void game_event(engine_t *engine, sfEvent *event)
 
     if (!data || !event)
         return;
-    if (event->type == sfEvtKeyPressed && event->key.code == sfKeyEscape)
-        sfRenderWindow_close(engine->window);
+    if (event->type == sfEvtKeyPressed && event->key.code == sfKeyEscape) {
+        data->is_paused = !data->is_paused;
+        sfRenderWindow_setMouseCursorVisible(engine->window, data->is_paused);
+        sfRenderWindow_setMouseCursorGrabbed(engine->window, !data->is_paused);
+    }
+    if (data->is_paused) {
+        pause_events(engine, data, event);
+        return;
+    }
     if (event->type == sfEvtMouseButtonPressed
         && event->mouseButton.button == sfMouseRight)
         data->player.is_zooming = true;

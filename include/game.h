@@ -14,6 +14,7 @@
     #include <stdlib.h>
 
     #include "graphics/engine.h"
+    #include "menu.h"
 
     #define MAP_HEIGHT 24
     #define MAP_WIDTH 24
@@ -95,6 +96,8 @@ typedef struct game_s {
     float target_fov;
     float bobbing_clock;
     hud_t *hud;
+    bool is_paused;
+    pause_menu_t pause;
 } game_data_t;
 
 typedef struct ray_s {

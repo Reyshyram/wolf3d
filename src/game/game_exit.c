@@ -13,6 +13,7 @@
 #include <SFML/Graphics/View.h>
 #include <stdlib.h>
 
+#include "menu.h"
 #include "game.h"
 #include "graphics/engine.h"
 
@@ -30,6 +31,7 @@ void game_exit(engine_t *engine)
         sfRectangleShape_destroy(data->floor_ceil);
     sfRenderTexture_destroy(data->render_texture);
     free_hud(data->hud);
+    pause_destroy(data);
     free(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, true);
 }

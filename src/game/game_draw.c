@@ -16,6 +16,7 @@
 
 #include "graphics/engine.h"
 
+#include "menu.h"
 #include "game.h"
 #include "wolf3d.h"
 
@@ -76,4 +77,7 @@ void game_draw(engine_t *engine)
     draw_vignette(engine, d);
     view_mini_map(engine, d, d->hud);
     draw_timer(engine, d->hud);
+    if (d->is_paused) {
+        pause_draw(engine, d);
+    }
 }

@@ -21,6 +21,7 @@
 #include "graphics/engine.h"
 #include "graphics/resources.h"
 
+#include "menu.h"
 #include "game.h"
 #include "wolf3d.h"
 
@@ -122,6 +123,8 @@ void game_enter(engine_t *engine)
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
     data->render_texture =
         sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
+    data->is_paused = false;
+    pause_init(engine, data);
     if (init_hud(engine, data) == ERROR)
         return;
 }

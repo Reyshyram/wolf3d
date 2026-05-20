@@ -13,6 +13,7 @@
 #include "graphics/engine.h"
 #include "graphics/maths.h"
 
+#include "menu.h"
 #include "game.h"
 #include "wolf3d.h"
 
@@ -182,6 +183,10 @@ void game_update(engine_t *engine)
 #ifdef DEBUG
     print_framerate();
 #endif
+    if (d->is_paused) {
+        pause_update(engine, d);
+        return;
+    }
     handle_player(engine, d);
     d->fov = interpolatef(d->fov,
         d->target_fov * (d->player.is_zooming ? 1 / ZOOM_FACTOR : 1),
