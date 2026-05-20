@@ -19,6 +19,8 @@
     #define W_FAST 5500
     #define W_BASIC 40000
     #define W_SLOW 175000
+
+    #define MUSIC_PATH MUSICS_PATH "music.mp3"
 // clang-format on
 
 int print_help(void);

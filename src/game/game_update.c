@@ -14,8 +14,10 @@
 
 #include "graphics/engine.h"
 #include "graphics/maths.h"
+#include "graphics/sprite_anim.h"
 
 #include "game.h"
+#include "weapons.h"
 
 #ifdef DEBUG
 
@@ -189,8 +191,10 @@ void game_update(engine_t *engine)
     print_framerate();
 #endif
     handle_player(engine, d);
+    update_weapons(engine, d);
     d->fov = interpolatef(d->fov,
         d->target_fov * (d->player.is_zooming ? 1 / ZOOM_FACTOR : 1),
         engine->dt * 10);
     d->hud->timer_time += engine->dt;
+    sprite_anim_update(d->hud->cursor, engine->dt);
 }

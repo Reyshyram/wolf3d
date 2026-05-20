@@ -8,22 +8,21 @@
 #include <SFML/Audio/Sound.h>
 #include <SFML/Graphics/Glsl.h>
 #include <SFML/Graphics/PrimitiveType.h>
-#include <SFML/Graphics/Rect.h>
 #include <SFML/Graphics/RectangleShape.h>
 #include <SFML/Graphics/RenderTexture.h>
 #include <SFML/Graphics/RenderWindow.h>
 #include <SFML/Graphics/Shader.h>
 #include <SFML/Graphics/Types.h>
 #include <SFML/Graphics/VertexArray.h>
-#include <SFML/Graphics/View.h>
 #include <SFML/System/Vector2.h>
 #include <string.h>
 
 #include "graphics/engine.h"
 #include "graphics/resources.h"
 
-#include "graphics/engine.h"
 #include "game.h"
+#include "graphics/engine.h"
+#include "weapons.h"
 #include "wolf3d.h"
 
 static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {
@@ -53,8 +52,8 @@ static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
-static void set_up_floor_ceil_shader(engine_t *engine,
-    game_data_t *data, sfShader *s)
+static void set_up_floor_ceil_shader(engine_t *engine, game_data_t *data,
+    sfShader *s)
 {
     sfGlslVec2 textures_size = {NB_WALL_TEXTURES * WALL_TEXTURE_WIDTH,
         WALL_TEXTURE_HEIGHT};
@@ -109,6 +108,19 @@ static void init_player(engine_t *engine, game_data_t *data)
     sfSound_setLoop(data->player.steps, true);
 }
 
+static void init_rendering(engine_t *engine, game_data_t *data)
+{
+    data->rays = sfVertexArray_create();
+    sfVertexArray_resize(data->rays, (size_t) engine->window_size.x * 2);
+    sfVertexArray_setPrimitiveType(data->rays, sfLines);
+    data->wall_textures =
+        resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
+    data->render_texture =
+        sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
+    set_up_floor_ceil(engine, data);
+    init_vignette_shader(engine, data);
+}
+
 void game_enter(engine_t *engine)
 {
     game_data_t *data = (game_data_t *) engine->scene->data;
@@ -117,18 +129,15 @@ void game_enter(engine_t *engine)
         return;
     memcpy(data->map, WORLD_MAP, sizeof(data->map));
     init_player(engine, data);
-    data->rays = sfVertexArray_create();
-    sfVertexArray_resize(data->rays, (size_t) engine->window_size.x * 2);
-    sfVertexArray_setPrimitiveType(data->rays, sfLines);
-    data->wall_textures =
-        resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
-    set_up_floor_ceil(engine, data);
-    init_vignette_shader(engine, data);
+    init_rendering(engine, data);
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
-    sfMouse_setPositionRenderWindow((sfVector2i) {engine->window_size.x / 2,
-            engine->window_size.y / 2}, engine->window);
+    sfMouse_setPositionRenderWindow(
+        (sfVector2i) {engine->window_size.x / 2, engine->window_size.y / 2},
+        engine->window);
     data->render_texture = sfRenderTexture_create(engine->window_size.x,
         engine->window_size.y, false);
     if (init_hud(engine, data) == ERROR)
+        return;
+    if (init_weapons(engine, data, DEFAULT_MAIN_WEAPON) == ERROR)
         return;
 }

@@ -26,7 +26,7 @@
     #define ASSETS_PATH "assets/"
     #define FONTS_PATH ASSETS_PATH "fonts/"
     #define SPRITES_PATH ASSETS_PATH "sprites/"
-    #define MUSICS_PATHS ASSETS_PATH "musics/"
+    #define MUSICS_PATH ASSETS_PATH "musics/"
     #define SHADERS_PATH ASSETS_PATH "shaders/"
     #define SFXS_PATHS ASSETS_PATH "sfxs/"
 

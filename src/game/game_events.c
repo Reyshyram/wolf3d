@@ -6,7 +6,6 @@
 */
 
 #include <SFML/Graphics/RenderWindow.h>
-#include <SFML/Graphics/View.h>
 #include <SFML/Window/Event.h>
 #include <SFML/Window/Keyboard.h>
 #include <SFML/Window/Mouse.h>
@@ -14,6 +13,7 @@
 #include "graphics/engine.h"
 
 #include "game.h"
+#include "weapons.h"
 #include "wolf3d.h"
 
 static void switch_fullscreen(engine_t *engine)
@@ -35,6 +35,20 @@ static void switch_fullscreen(engine_t *engine)
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
 }
 
+static void weapons_events(game_data_t *d, sfEvent *event)
+{
+    weapon_t *w = &d->weapons[d->active_weapon];
+
+    if (event->type == sfEvtMouseButtonPressed
+        && event->mouseButton.button == sfMouseLeft
+        && !w->weapon_data->is_auto)
+        weapon_shoot(d);
+    if (event->type == sfEvtKeyPressed && event->key.code == sfKeyR)
+        weapon_reload(d);
+    if (event->type == sfEvtKeyPressed && event->key.code == sfKeyTab)
+        weapon_change(d);
+}
+
 void game_event(engine_t *engine, sfEvent *event)
 {
     game_data_t *data = (game_data_t *) engine->scene->data;
@@ -51,4 +65,5 @@ void game_event(engine_t *engine, sfEvent *event)
         data->player.is_zooming = false;
     if (event->type == sfEvtKeyPressed && event->key.code == sfKeyF)
         switch_fullscreen(engine);
+    weapons_events(data, event);
 }

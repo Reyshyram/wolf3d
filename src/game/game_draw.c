@@ -17,6 +17,7 @@
 #include "graphics/engine.h"
 
 #include "game.h"
+#include "weapons.h"
 #include "wolf3d.h"
 
 static void apply_bobbing(float dt, game_data_t *d, engine_t *engine)
@@ -80,6 +81,8 @@ void game_draw(engine_t *engine)
         return;
     draw_environment(engine, d);
     draw_vignette(engine, d);
+    draw_weapon(engine, d);
     view_mini_map(engine, d, d->hud);
     draw_timer(engine, d->hud);
+    draw_weapon_hud(engine, d);
 }
