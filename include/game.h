@@ -9,11 +9,16 @@
 // clang-format off
     #define GAME_H
 
+    #include <SFML/Audio/Types.h>
+    #include <SFML/Graphics/Rect.h>
     #include <SFML/Graphics/Types.h>
     #include <SFML/System/Vector2.h>
     #include <stdlib.h>
 
     #include "graphics/engine.h"
+    #include "graphics/sprite_anim.h"
+
+    #include "weapons.h"
 
     #define MAP_HEIGHT 24
     #define MAP_WIDTH 24
@@ -61,6 +66,14 @@
     #define TIMER_POS (sfVector2f) {50, 50}
 
     #define STEPS_SOUND SFXS_PATHS "player/steps.mp3"
+
+    #define CURSOR_PATH SPRITES_PATH "cursor.png"
+    #define HUD_FONT_PATH FONTS_PATH "old_stamper.ttf"
+    #define CURSOR_SIZE 48.0F
+    #define CURSOR_WIDTH 20
+    #define CURSOR_HEIGHT 20
+    #define CURSOR_FRAME_COUNT 6
+    #define CURSOR_ANIMATION_FPS 12.0F
 // clang-format on
 
 typedef struct {
@@ -80,7 +93,17 @@ typedef struct hud_s {
     sfVector2u mini_map_size;
     sfText *timer;
     float timer_time;
+    sprite_anim_t *cursor;
+    sfFont *hud_font;
+    sfSprite *ammo_sprite;
+    sfText *ammo_text;
 } hud_t;
+
+typedef struct {
+    sfVector2f pos;
+    sfFloatRect bounds;
+    float scale;
+} hud_layout_t;
 
 typedef struct game_s {
     int map[MAP_WIDTH][MAP_HEIGHT];
@@ -98,6 +121,9 @@ typedef struct game_s {
     float target_fov;
     float bobbing_clock;
     hud_t *hud;
+    weapon_t weapons[WEAPON_SLOT_COUNT];
+    int active_weapon;
+    float recoil_vel;
 } game_data_t;
 
 typedef struct ray_s {

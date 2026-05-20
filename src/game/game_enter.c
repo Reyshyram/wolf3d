@@ -8,14 +8,12 @@
 #include <SFML/Audio/Sound.h>
 #include <SFML/Graphics/Glsl.h>
 #include <SFML/Graphics/PrimitiveType.h>
-#include <SFML/Graphics/Rect.h>
 #include <SFML/Graphics/RectangleShape.h>
 #include <SFML/Graphics/RenderTexture.h>
 #include <SFML/Graphics/RenderWindow.h>
 #include <SFML/Graphics/Shader.h>
 #include <SFML/Graphics/Types.h>
 #include <SFML/Graphics/VertexArray.h>
-#include <SFML/Graphics/View.h>
 #include <SFML/System/Vector2.h>
 #include <string.h>
 
@@ -23,6 +21,7 @@
 #include "graphics/resources.h"
 
 #include "game.h"
+#include "weapons.h"
 #include "wolf3d.h"
 
 static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {
@@ -105,6 +104,19 @@ static void init_player(engine_t *engine, game_data_t *data)
     sfSound_setLoop(data->player.steps, true);
 }
 
+static void init_rendering(engine_t *engine, game_data_t *data)
+{
+    data->rays = sfVertexArray_create();
+    sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
+    sfVertexArray_setPrimitiveType(data->rays, sfLines);
+    data->wall_textures =
+        resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
+    data->render_texture =
+        sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
+    set_up_floor_ceil(data);
+    init_vignette_shader(data);
+}
+
 void game_enter(engine_t *engine)
 {
     game_data_t *data = (game_data_t *) engine->scene->data;
@@ -113,18 +125,12 @@ void game_enter(engine_t *engine)
         return;
     memcpy(data->map, WORLD_MAP, sizeof(data->map));
     init_player(engine, data);
-    data->rays = sfVertexArray_create();
-    sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
-    sfVertexArray_setPrimitiveType(data->rays, sfLines);
-    data->wall_textures =
-        resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
-    set_up_floor_ceil(data);
-    init_vignette_shader(data);
+    init_rendering(engine, data);
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
-    data->render_texture =
-        sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
     if (init_hud(engine, data) == ERROR)
+        return;
+    if (init_weapons(engine, data, DEFAULT_MAIN_WEAPON) == ERROR)
         return;
 }
