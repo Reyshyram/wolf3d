@@ -5,18 +5,21 @@
 ** menu_create
 */
 
-#include <stdlib.h>
 #include "graphics/engine.h"
 #include "graphics/resources.h"
+#include "graphics/sprite_anim.h"
 #include "menu.h"
 #include "wolf3d.h"
+#include <SFML/Graphics/Sprite.h>
+#include <SFML/System/Vector2.h>
+#include <stdlib.h>
 
 void init_buttons(engine_t *engine, menu_data_t *data)
 {
     sfVector2u text_size = sfTexture_getSize(resources_load_texture(
-            engine->resources, "assets/sprites/main_menu/button_play.png"));
-    sfVector2f size = {350.0F, 350.0F * (float)text_size.y
-        / (float)text_size.x};
+        engine->resources, "assets/sprites/main_menu/button_play.png"));
+    sfVector2f size = {350.0F,
+        350.0F * (float) text_size.y / (float) text_size.x};
     sfVector2f pos_p = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F - 20.0F};
     sfVector2f pos_e = {WIN_WIDTH / 2.0F, pos_p.y + size.y + 40.0F};
 
@@ -34,21 +37,24 @@ void init_sprites(engine_t *engine, menu_data_t *data)
 {
     sfTexture *texture_bg = resources_load_texture(engine->resources,
         "assets/sprites/main_menu/background.png");
-    sfTexture *texture_logo = resources_load_texture(engine->resources,
-        "assets/sprites/main_menu/logo.png");
     sfVector2u bg_size = sfTexture_getSize(texture_bg);
-    sfFloatRect bounds;
+    const sprite_frame_info_t info = {{0, 0, LOGO_WIDTH, LOGO_HEIGHT},
+        LOGO_FRAMES, LOGO_FPS};
 
     data->bg = sfSprite_create();
     sfSprite_setTexture(data->bg, texture_bg, sfTrue);
-    sfSprite_setScale(data->bg, (sfVector2f){(float)WIN_WIDTH /
-            (float)bg_size.x, (float)WIN_HEIGHT / (float)bg_size.y});
-    data->logo = sfSprite_create();
-    sfSprite_setTexture(data->logo, texture_logo, sfTrue);
-    bounds = sfSprite_getLocalBounds(data->logo);
-    sfSprite_setOrigin(data->logo, (sfVector2f){bounds.width / 2.0F,
-            bounds.height / 2.0F});
-    sfSprite_setPosition(data->logo, (sfVector2f){WIN_WIDTH / 2.0F, 150.0F});
+    sfSprite_setScale(data->bg,
+        (sfVector2f) {(float) WIN_WIDTH / (float) bg_size.x,
+            (float) WIN_HEIGHT / (float) bg_size.y});
+    data->logo =
+        sprite_anim_create("assets/sprites/main_menu/logo.png", &info, engine);
+    sfSprite_setOrigin(data->logo->sprite,
+        (sfVector2f) {LOGO_WIDTH / 2.0F, LOGO_HEIGHT / 2.0F});
+    sfSprite_setScale(data->logo->sprite,
+        (sfVector2f) {(float) WIN_WIDTH / LOGO_WIDTH * 0.65F,
+            (float) WIN_WIDTH / LOGO_WIDTH * 0.65F});
+    sfSprite_setPosition(data->logo->sprite,
+        (sfVector2f) {WIN_WIDTH / 2.0F, 150.0F});
 }
 
 scene_t *menu_create(void)

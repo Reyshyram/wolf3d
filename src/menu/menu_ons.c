@@ -5,12 +5,14 @@
 ** menu_ons
 */
 
-#include <stdlib.h>
+#include "game.h"
 #include "graphics/engine.h"
 #include "graphics/resources.h"
-#include "game.h"
+#include "graphics/sprite_anim.h"
 #include "menu.h"
 #include "wolf3d.h"
+#include <SFML/Graphics/Sprite.h>
+#include <stdlib.h>
 
 void on_play_click(void *data)
 {
@@ -43,7 +45,7 @@ void menu_on_exit(engine_t *engine)
     menu_data_t *data = engine->scene->data;
 
     sfSprite_destroy(data->bg);
-    sfSprite_destroy(data->logo);
+    sprite_anim_destroy(data->logo);
     ui_button_destroy(data->play_btn);
     ui_button_destroy(data->exit_btn);
     free(data);

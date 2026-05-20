@@ -5,18 +5,18 @@
 ** menu_draw
 */
 
-#include <stdlib.h>
 #include "graphics/engine.h"
 #include "graphics/resources.h"
 #include "menu.h"
 #include "wolf3d.h"
+#include <stdlib.h>
 
 void menu_draw(engine_t *engine)
 {
     menu_data_t *data = engine->scene->data;
 
     sfRenderWindow_drawSprite(engine->window, data->bg, NULL);
-    sfRenderWindow_drawSprite(engine->window, data->logo, NULL);
+    sfRenderWindow_drawSprite(engine->window, data->logo->sprite, NULL);
     sfRenderWindow_drawRectangleShape(engine->window,
         data->play_btn->background, NULL);
     sfRenderWindow_drawRectangleShape(engine->window,

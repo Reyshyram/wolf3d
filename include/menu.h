@@ -10,12 +10,18 @@
     #define MENU_H_
 
     #include "graphics/engine.h"
+    #include "graphics/sprite_anim.h"
     #include "graphics/ui.h"
+
+    #define LOGO_FRAMES 5
+    #define LOGO_FPS 12.0F
+    #define LOGO_WIDTH 381
+    #define LOGO_HEIGHT 112
 // clang-format on
 
 typedef struct menu_data {
     sfSprite *bg;
-    sfSprite *logo;
+    sprite_anim_t *logo;
     ui_button_t *play_btn;
     ui_button_t *exit_btn;
 } menu_data_t;
