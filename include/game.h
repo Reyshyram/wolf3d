@@ -133,6 +133,7 @@ void game_exit(engine_t *engine);
 void game_draw(engine_t *engine);
 void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
+void game_on_resize(engine_t *engine);
 
 void cast_wall_ray(engine_t *engine, game_data_t *d, size_t x);
 void draw_floor_and_ceil(engine_t *engine, game_data_t *d);

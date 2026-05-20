@@ -20,6 +20,7 @@ scene_t *game_create(void)
         return nullptr;
     scene->on_enter = game_enter;
     scene->on_exit = game_exit;
+    scene->on_resize = game_on_resize;
     scene->draw = game_draw;
     scene->update = game_update;
     scene->handle_events = game_event;

@@ -16,7 +16,6 @@
 #include "graphics/maths.h"
 
 #include "game.h"
-#include "wolf3d.h"
 
 #ifdef DEBUG
 
@@ -180,29 +179,6 @@ static void handle_player(engine_t *engine, game_data_t *d)
     }
 }
 
-void temp_size(engine_t *engine)
-{
-    if (sfKeyboard_isKeyPressed(sfKeyF)) {
-        sfRenderWindow_close(engine->window);
-        sfVideoMode video_mode = sfVideoMode_getDesktopMode();
-        sfRenderWindow_destroy(engine->window);
-        sfRenderWindow *new_win =
-            sfRenderWindow_create(video_mode, "win 2", sfFullscreen, NULL);
-        engine->window = new_win;
-        sfView *view = sfView_create();
-        sfView_reset(view,
-            (sfFloatRect){0, 0, video_mode.width, video_mode.height});
-        sfRenderWindow_setView(engine->window, view);
-        sfRectangleShape_setSize(engine->transition_rect,
-            (sfVector2f) {(float)video_mode.width, (float)video_mode.height});
-        engine->window_size = sfRenderWindow_getSize(engine->window);
-        sfRenderWindow_setMouseCursorVisible(engine->window, false);
-        sfMouse_setPositionRenderWindow((sfVector2i)
-            {engine->window_size.x / 2, engine->window_size.y / 2},
-            engine->window);
-    }
-}
-
 void game_update(engine_t *engine)
 {
     game_data_t *d = (game_data_t *) engine->scene->data;
@@ -213,7 +189,6 @@ void game_update(engine_t *engine)
     print_framerate();
 #endif
     handle_player(engine, d);
-    temp_size(engine);
     d->fov = interpolatef(d->fov,
         d->target_fov * (d->player.is_zooming ? 1 / ZOOM_FACTOR : 1),
         engine->dt * 10);
