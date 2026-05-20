@@ -28,21 +28,22 @@ static void set_shader_uniforms(game_data_t *d, sfVector2f *ray_dir_left,
         (sfGlslVec2) {d->player.view_dir.x, d->player.view_dir.y});
 }
 
-void draw_floor_and_ceil(game_data_t *d)
+void draw_floor_and_ceil(engine_t *engine, game_data_t *d)
 {
     sfRenderStates states = sfRenderStates_default();
     sfVector2f ray_dir_left = {d->player.view_dir.x - d->camera_plane.x,
         d->player.view_dir.y - d->camera_plane.y};
     sfVector2f ray_dir_right = {d->player.view_dir.x + d->camera_plane.x,
         d->player.view_dir.y + d->camera_plane.y};
-    float horizon_y = (float) WIN_HEIGHT / 2 + d->camera_height;
+    float horizon_y = (float) engine->window_size.y / 2 + d->camera_height;
     float camera_plane_len = hypotf(d->camera_plane.x, d->camera_plane.y);
-    float plane_dist = ((float) WIN_WIDTH * (float) WALL_HEIGHT_MULT)
+    float plane_dist =
+        ((float) engine->window_size.x * (float) WALL_HEIGHT_MULT)
         / (2.0F * camera_plane_len);
 
     set_shader_uniforms(d, &ray_dir_left, &ray_dir_right);
     sfShader_setFloatUniform(d->floor_ceil_shader, "u_horizon_y",
-        WIN_HEIGHT - horizon_y);
+        engine->window_size.y - horizon_y);
     sfShader_setFloatUniform(d->floor_ceil_shader, "u_plane_dist", plane_dist);
     sfShader_setFloatUniform(d->floor_ceil_shader, "u_flashlight_enabled",
         ENABLE_FLASHLIGHT);

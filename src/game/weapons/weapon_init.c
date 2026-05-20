@@ -39,6 +39,17 @@ static void scale_sprite(sfSprite *sprite, sfTexture *tex, float height)
         (sfVector2f) {(float) size.x / 2.0F, (float) size.y / 2.0F});
 }
 
+void resize_weapons(engine_t *engine, game_data_t *data)
+{
+    for (size_t i = 0; i < WEAPON_SLOT_COUNT; i++) {
+        scale_sprite(data->weapons[i].ui_sprite, data->weapons[i].ui_texture,
+            HUD_WEAPON_HEIGHT);
+        scale_sprite(data->weapons[i].held_sprite,
+            data->weapons[i].held_texture,
+            (float) engine->window_size.y * WEAPON_HEIGHT);
+    }
+}
+
 static bool load_sprites(engine_t *engine, weapon_t *w)
 {
     w->ui_texture = resources_load_texture(engine->resources,
@@ -53,9 +64,6 @@ static bool load_sprites(engine_t *engine, weapon_t *w)
         return false;
     sfSprite_setTexture(w->ui_sprite, w->ui_texture, true);
     sfSprite_setTexture(w->held_sprite, w->held_texture, true);
-    scale_sprite(w->ui_sprite, w->ui_texture, HUD_WEAPON_HEIGHT);
-    scale_sprite(w->held_sprite, w->held_texture,
-        (float) WIN_HEIGHT * WEAPON_HEIGHT);
     return true;
 }
 
@@ -82,6 +90,7 @@ int init_weapons(engine_t *engine, game_data_t *data, weapon_type_t main_type)
     if (!init_weapon(engine, &data->weapons[WEAPON_SLOT_GRENADE],
             WEAPON_GRENADE))
         return ERROR;
+    resize_weapons(engine, data);
     data->active_weapon = WEAPON_SLOT_MAIN;
     return SUCCESS;
 }

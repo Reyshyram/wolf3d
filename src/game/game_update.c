@@ -18,7 +18,6 @@
 
 #include "game.h"
 #include "weapons.h"
-#include "wolf3d.h"
 
 #ifdef DEBUG
 
@@ -90,7 +89,7 @@ static void move_player(game_data_t *d, float dx, float dy)
 
 static void handle_camera_movement(game_data_t *d, engine_t *engine)
 {
-    sfVector2i center = {WIN_WIDTH / 2, WIN_HEIGHT / 2};
+    sfVector2i center = {engine->window_size.x / 2, engine->window_size.y / 2};
     sfVector2i mouse_pos = sfMouse_getPositionRenderWindow(engine->window);
     int mouse_dx = mouse_pos.x - center.x;
     int mouse_dy = mouse_pos.y - center.y;
@@ -103,10 +102,10 @@ static void handle_camera_movement(game_data_t *d, engine_t *engine)
         rotate_camera(d, -(float) mouse_dx * MOUSE_X_SENSITIVITY * mult);
     if (mouse_dy != 0)
         d->camera_height -= (float) mouse_dy * MOUSE_Y_SENSITIVITY * mult;
-    if (d->camera_height > (float) WIN_HEIGHT / 2 - 1)
-        d->camera_height = (float) WIN_HEIGHT / 2 - 1;
-    if (d->camera_height < -(float) WIN_HEIGHT / 2 + 1)
-        d->camera_height = -(float) WIN_HEIGHT / 2 + 1;
+    if (d->camera_height > (float) engine->window_size.y / 2 - 1)
+        d->camera_height = (float) engine->window_size.y / 2 - 1;
+    if (d->camera_height < -(float) engine->window_size.y / 2 + 1)
+        d->camera_height = -(float) engine->window_size.y / 2 + 1;
 }
 
 static sfVector2f get_normalized_movement(float dt, sfVector2f *dir)

@@ -76,12 +76,13 @@ static void draw_minimap_texture(hud_t *hud, game_data_t *d, float angle)
     sfRenderTexture_display(hud->mini_map_render);
 }
 
-static sfVector2f get_minimap_pos(hud_t *hud, const sfFloatRect *viewport)
+static sfVector2f get_minimap_pos(engine_t *engine, hud_t *hud,
+    const sfFloatRect *viewport)
 {
-    float width = (float) WIN_WIDTH * viewport->width;
-    float height = (float) WIN_HEIGHT * viewport->height;
-    float left = (float) WIN_WIDTH * viewport->left;
-    float top = (float) WIN_HEIGHT * viewport->top;
+    float width = (float) engine->window_size.x * viewport->width;
+    float height = (float) engine->window_size.y * viewport->height;
+    float left = (float) engine->window_size.x * viewport->left;
+    float top = (float) engine->window_size.y * viewport->top;
 
     return (sfVector2f) {left + (width - (float) hud->mini_map_size.x) / 2,
         top + (height - (float) hud->mini_map_size.y) / 2};
@@ -95,7 +96,7 @@ void view_mini_map(engine_t *engine, game_data_t *d, hud_t *hud)
     sfVector2f minimap_pos;
 
     draw_minimap_texture(hud, d, angle);
-    minimap_pos = get_minimap_pos(hud, &viewport);
+    minimap_pos = get_minimap_pos(engine, hud, &viewport);
     minimap_pos.x += (float) hud->mini_map_size.x;
     sfCircleShape_setPosition(hud->mini_map_shape, minimap_pos);
     sfCircleShape_setTexture(hud->mini_map_shape,

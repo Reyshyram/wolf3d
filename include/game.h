@@ -67,6 +67,8 @@
 
     #define STEPS_SOUND SFXS_PATHS "player/steps.mp3"
 
+    #define NORMAL_BOBBING 3840.0F
+
     #define CURSOR_PATH SPRITES_PATH "cursor.png"
     #define HUD_FONT_PATH FONTS_PATH "old_stamper.ttf"
     #define CURSOR_SIZE 48.0F
@@ -156,9 +158,10 @@ void game_exit(engine_t *engine);
 void game_draw(engine_t *engine);
 void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
+void game_on_resize(engine_t *engine);
 
-void cast_wall_ray(game_data_t *d, size_t x);
-void draw_floor_and_ceil(game_data_t *d);
+void cast_wall_ray(engine_t *engine, game_data_t *d, size_t x);
+void draw_floor_and_ceil(engine_t *engine, game_data_t *d);
 
 int init_hud(engine_t *engine, game_data_t *data);
 void free_hud(hud_t *hud);

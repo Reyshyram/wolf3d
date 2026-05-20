@@ -89,13 +89,13 @@ static bool init_ammo_texts(engine_t *engine, hud_t *hud)
     return true;
 }
 
-static bool init_timer(hud_t *hud)
+static bool init_timer(engine_t *engine, hud_t *hud)
 {
     hud->timer = sfText_create();
     if (!hud->timer)
         return false;
     sfText_setFont(hud->timer, hud->hud_font);
-    sfText_setCharacterSize(hud->timer, WIN_WIDTH / 33.75);
+    sfText_setCharacterSize(hud->timer, engine->window_size.x / 33.75);
     sfText_setColor(hud->timer, sfWhite);
     sfText_setStyle(hud->timer, sfTextBold);
     sfText_setPosition(hud->timer, TIMER_POS);
@@ -105,8 +105,8 @@ static bool init_timer(hud_t *hud)
 int init_hud(engine_t *engine, game_data_t *data)
 {
     sfFloatRect viewport = MINIMAP_VIEWPORT;
-    float view_width = (float) WIN_WIDTH * viewport.width;
-    float view_height = (float) WIN_HEIGHT * viewport.height;
+    float view_width = (float) engine->window_size.x * viewport.width;
+    float view_height = (float) engine->window_size.y * viewport.height;
     unsigned int mini_map_size =
         (unsigned int) (view_width < view_height ? view_width : view_height);
 
@@ -115,8 +115,8 @@ int init_hud(engine_t *engine, game_data_t *data)
         return ERROR;
     memset(data->hud, 0, sizeof(*data->hud));
     if (!init_minimap(data->hud, mini_map_size)
-        || !init_ammo_texts(engine, data->hud) || !init_timer(data->hud)
-        || !init_cursor(engine, data->hud)
+        || !init_ammo_texts(engine, data->hud)
+        || !init_timer(engine, data->hud) || !init_cursor(engine, data->hud)
         || !init_ammo_sprite(engine, data->hud)) {
         free_hud(data->hud);
         data->hud = nullptr;

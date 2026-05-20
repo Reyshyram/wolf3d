@@ -118,6 +118,7 @@ typedef struct {
 typedef struct game_s game_data_t;
 
 int init_weapons(engine_t *engine, game_data_t *data, weapon_type_t main_type);
+void resize_weapons(engine_t *engine, game_data_t *data);
 void free_weapons(game_data_t *data);
 void update_weapons(engine_t *engine, game_data_t *d);
 void draw_weapon(engine_t *engine, game_data_t *d);

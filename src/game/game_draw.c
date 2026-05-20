@@ -20,7 +20,7 @@
 #include "weapons.h"
 #include "wolf3d.h"
 
-static void apply_bobbing(float dt, game_data_t *d)
+static void apply_bobbing(float dt, game_data_t *d, engine_t *engine)
 {
     float mult = 1;
 
@@ -32,15 +32,10 @@ static void apply_bobbing(float dt, game_data_t *d)
             mult = CROUCH_MULT;
         if (d->player.is_zooming)
             mult /= 2;
-#ifdef DEBUG
-        d->camera_height += sinf(d->bobbing_clock) / 16 * mult;
-#endif
-#ifndef DEBUG
-        d->camera_height += sinf(d->bobbing_clock) * 1.5F * mult;
-#endif
-    } else {
+        d->camera_height += sinf(d->bobbing_clock)
+            / (NORMAL_BOBBING / (float) engine->window_size.y) * mult;
+    } else
         d->bobbing_clock = 0;
-    }
 }
 
 static void draw_environment(engine_t *engine, game_data_t *d)
@@ -52,13 +47,13 @@ static void draw_environment(engine_t *engine, game_data_t *d)
     if (!sprite)
         return;
     sfVertexArray_clear(d->rays);
-    draw_floor_and_ceil(d);
-    for (size_t x = 0; x <= WIN_WIDTH; x++)
-        cast_wall_ray(d, x);
+    draw_floor_and_ceil(engine, d);
+    for (size_t x = 0; x <= engine->window_size.x; x++)
+        cast_wall_ray(engine, d, x);
     states.texture = d->wall_textures;
     sfRenderTexture_drawVertexArray(d->render_texture, d->rays, &states);
     sfRenderTexture_display(d->render_texture);
-    apply_bobbing(engine->dt, d);
+    apply_bobbing(engine->dt, d, engine);
     sfSprite_setTexture(sprite, render, true);
     sfRenderWindow_drawSprite(engine->window, sprite, nullptr);
     sfSprite_destroy(sprite);
