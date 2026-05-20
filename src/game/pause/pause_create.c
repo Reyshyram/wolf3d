@@ -27,7 +27,7 @@ static ui_button_t *create_btn(engine_t *engine, const char *tex, sfVector2f *po
 static void init_pause_bg(engine_t *engine, pause_menu_t *pause)
 {
     sfTexture *texture = resources_load_texture(engine->resources,
-        "main_menu/bg_menu_pause.png");
+        "assets/sprites/main_menu/bg_menu_pause.png");
     sfVector2u text_size = sfTexture_getSize(texture);
     sfColor line_c = {0, 0, 0, 100};
 
@@ -50,14 +50,16 @@ static void init_left(engine_t *engine, pause_menu_t *pause)
     sfVector2f p3 = {p1.x, p2.y + 100.0F};
     sfColor w = {255, 255, 255, 255};
 
-    pause->resume = create_btn(engine, "main_menu/button_resume.png", &p1);
+    pause->resume = create_btn(engine,
+        "assets/sprites/main_menu/button_resume.png", &p1);
     pause->resume->on_click = &pause_on_resume;
     pause->resume->data = engine;
     pause->save = create_btn(engine, NULL, &p2);
     ui_button_set_text(pause->save, "SAVE", 40, &w);
     pause->save->on_click = &pause_on_save;
     pause->save->data = engine;
-    pause->exit = create_btn(engine, "main_menu/button_exit.png", &p3);
+    pause->exit = create_btn(engine,
+        "assets/sprites/main_menu/button_exit.png", &p3);
     pause->exit->on_click = &pause_on_exit;
     pause->exit->data = engine;
 }
@@ -69,7 +71,8 @@ static void init_right(engine_t *engine, pause_menu_t *pause)
     sfVector2f p3 = {p1.x, p2.y + 100.0F};
     sfColor right_way = {255, 255, 255, 255};
 
-    pause->controls = create_btn(engine, "main_menu/button_params.png", &p1);
+    pause->controls = create_btn(engine,
+        "assets/sprites/main_menu/button_params.png", &p1);
     pause->controls->on_click = &pause_on_controls;
     pause->controls->data = engine;
     pause->sounds = create_btn(engine, NULL, &p2);
