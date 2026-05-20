@@ -36,7 +36,7 @@ void init_buttons(engine_t *engine, menu_data_t *data)
 void init_sprites(engine_t *engine, menu_data_t *data)
 {
     sfTexture *texture_bg = resources_load_texture(engine->resources,
-        "assets/sprites/main_menu/background.png");
+        "assets/sprites/main_menu/background.jpg");
     sfVector2u bg_size = sfTexture_getSize(texture_bg);
     const sprite_frame_info_t info = {{0, 0, LOGO_WIDTH, LOGO_HEIGHT},
         LOGO_FRAMES, LOGO_FPS};
