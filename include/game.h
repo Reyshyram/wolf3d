@@ -61,6 +61,9 @@
     #define TIMER_POS (sfVector2f) {50, 50}
 
     #define STEPS_SOUND SFXS_PATHS "player/steps.mp3"
+
+    #define NORMAL_BOBBING 1611.94F
+    #define DEBUG_BOBBING 67.5F
 // clang-format on
 
 typedef struct {

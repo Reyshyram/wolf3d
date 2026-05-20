@@ -184,12 +184,18 @@ void temp_size(engine_t *engine)
 {
     if (sfKeyboard_isKeyPressed(sfKeyF)) {
         sfRenderWindow_close(engine->window);
-        sfVideoMode video_mode = {WIN_WIDTH / 1.25, WIN_HEIGHT / 1.25, 32};
-        sfRenderWindow *winfull =
-            sfRenderWindow_create(video_mode, "win tiny", sfClose, NULL);
-        engine->window = winfull;
-        engine->window_size =
-            (sfVector2u){WIN_WIDTH / 1.25, WIN_HEIGHT / 1.25};
+        sfVideoMode video_mode = sfVideoMode_getDesktopMode();
+        sfRenderWindow_destroy(engine->window);
+        sfRenderWindow *new_win =
+            sfRenderWindow_create(video_mode, "win 2", sfFullscreen, NULL);
+        engine->window = new_win;
+        sfView *view = sfView_create();
+        sfView_reset(view,
+            (sfFloatRect){0, 0, video_mode.width, video_mode.height});
+        sfRenderWindow_setView(engine->window, view);
+        sfRectangleShape_setSize(engine->transition_rect,
+            (sfVector2f) {(float)video_mode.width, (float)video_mode.height});
+        engine->window_size = sfRenderWindow_getSize(engine->window);
         sfRenderWindow_setMouseCursorVisible(engine->window, false);
         sfMouse_setPositionRenderWindow((sfVector2i)
             {engine->window_size.x / 2, engine->window_size.y / 2},

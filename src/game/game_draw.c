@@ -33,11 +33,11 @@ static void apply_bobbing(float dt, game_data_t *d, engine_t *engine)
             mult /= 2;
 #ifdef DEBUG
         d->camera_height += sinf(d->bobbing_clock) /
-            (engine->window_size.y / 67.5) * mult;
+            (engine->window_size.y / DEBUG_BOBBING) * mult;
 #endif
 #ifndef DEBUG
         d->camera_height += sinf(d->bobbing_clock) /
-            (engine->window_size.y / 1611.94) * mult;
+            (engine->window_size.y / NORMAL_BOBBING) * mult;
 #endif
     } else
         d->bobbing_clock = 0;
