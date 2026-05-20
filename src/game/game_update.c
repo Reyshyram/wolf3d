@@ -88,7 +88,7 @@ static void move_player(game_data_t *d, float dx, float dy)
 
 static void handle_camera_movement(game_data_t *d, engine_t *engine)
 {
-    sfVector2i center = {WIN_WIDTH / 2, WIN_HEIGHT / 2};
+    sfVector2i center = {engine->window_size.x / 2, engine->window_size.y / 2};
     sfVector2i mouse_pos = sfMouse_getPositionRenderWindow(engine->window);
     int mouse_dx = mouse_pos.x - center.x;
     int mouse_dy = mouse_pos.y - center.y;
@@ -101,10 +101,10 @@ static void handle_camera_movement(game_data_t *d, engine_t *engine)
         rotate_camera(d, -(float) mouse_dx * MOUSE_X_SENSITIVITY * mult);
     if (mouse_dy != 0)
         d->camera_height -= (float) mouse_dy * MOUSE_Y_SENSITIVITY * mult;
-    if (d->camera_height > (float) WIN_HEIGHT / 2 - 1)
-        d->camera_height = (float) WIN_HEIGHT / 2 - 1;
-    if (d->camera_height < -(float) WIN_HEIGHT / 2 + 1)
-        d->camera_height = -(float) WIN_HEIGHT / 2 + 1;
+    if (d->camera_height > (float) engine->window_size.y / 2 - 1)
+        d->camera_height = (float) engine->window_size.y / 2 - 1;
+    if (d->camera_height < -(float) engine->window_size.y / 2 + 1)
+        d->camera_height = -(float) engine->window_size.y / 2 + 1;
 }
 
 static sfVector2f get_normalized_movement(float dt, sfVector2f *dir)
@@ -180,6 +180,23 @@ static void handle_player(engine_t *engine, game_data_t *d)
     }
 }
 
+void temp_size(engine_t *engine)
+{
+    if (sfKeyboard_isKeyPressed(sfKeyF)) {
+        sfRenderWindow_close(engine->window);
+        sfVideoMode video_mode = {WIN_WIDTH / 1.25, WIN_HEIGHT / 1.25, 32};
+        sfRenderWindow *winfull =
+            sfRenderWindow_create(video_mode, "win tiny", sfClose, NULL);
+        engine->window = winfull;
+        engine->window_size =
+            (sfVector2u){WIN_WIDTH / 1.25, WIN_HEIGHT / 1.25};
+        sfRenderWindow_setMouseCursorVisible(engine->window, false);
+        sfMouse_setPositionRenderWindow((sfVector2i)
+            {engine->window_size.x / 2, engine->window_size.y / 2},
+            engine->window);
+    }
+}
+
 void game_update(engine_t *engine)
 {
     game_data_t *d = (game_data_t *) engine->scene->data;
@@ -190,6 +207,7 @@ void game_update(engine_t *engine)
     print_framerate();
 #endif
     handle_player(engine, d);
+    temp_size(engine);
     d->fov = interpolatef(d->fov,
         d->target_fov * (d->player.is_zooming ? 1 / ZOOM_FACTOR : 1),
         engine->dt * 10);

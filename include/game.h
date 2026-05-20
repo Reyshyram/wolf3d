@@ -131,8 +131,8 @@ void game_draw(engine_t *engine);
 void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
 
-void cast_wall_ray(game_data_t *d, size_t x);
-void draw_floor_and_ceil(game_data_t *d);
+void cast_wall_ray(engine_t *engine, game_data_t *d, size_t x);
+void draw_floor_and_ceil(engine_t *engine, game_data_t *d);
 
 int init_hud(engine_t *engine, game_data_t *data);
 void free_hud(hud_t *hud);
