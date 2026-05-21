@@ -18,7 +18,7 @@ bool weapon_shoot(game_data_t *d)
         return false;
     w->ammo--;
     w->shoot_cooldown = w->weapon_data->fire_cooldown;
-    d->recoil_vel -= w->weapon_data->recoil;
+    d->recoil_vel += w->weapon_data->recoil;
     w->shoot_anim_timer = SHOOT_ANIM_DURATION;
     sfSound_play(w->shoot_sound);
     return true;
