@@ -85,5 +85,16 @@ void pause_on_sound_steps(void *data);
 void pause_on_hud_minimap(void *data);
 void pause_on_hud_timer(void *data);
 void pause_update(engine_t *engine, game_data_t *data);
+// Utils
+ui_button_t *create_btn(engine_t *engine, const char *tex,
+    sfVector2f *pos);
+void init_setting_btn(ui_button_t *button, engine_t *engine,
+    void (*on_click)(void *), const char *label);
+ui_button_t *create_text_btn(engine_t *engine, sfVector2f *pos,
+    sfVector2f *size, const char *label);
+void destroy_text_btn(ui_button_t *button);
+void set_pause_page(engine_t *engine, pause_page_t page);
+void set_button_state(ui_button_t *button, const char *label,
+    bool enabled);
 
 #endif /* !MENU_H_ */
