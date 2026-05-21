@@ -106,13 +106,8 @@ static void init_player(engine_t *engine, game_data_t *data)
     sfSound_setLoop(data->player.steps, true);
 }
 
-void game_enter(engine_t *engine)
+static void init_game_state(engine_t *engine, game_data_t *data)
 {
-    game_data_t *data = (game_data_t *) engine->scene->data;
-
-    if (!data)
-        return;
-    memcpy(data->map, WORLD_MAP, sizeof(data->map));
     init_player(engine, data);
     data->rays = sfVertexArray_create();
     sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
@@ -121,6 +116,10 @@ void game_enter(engine_t *engine)
         resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
     set_up_floor_ceil(data);
     init_vignette_shader(data);
+}
+
+static void init_game_window(engine_t *engine, game_data_t *data)
+{
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
@@ -128,6 +127,22 @@ void game_enter(engine_t *engine)
         sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
     data->is_paused = false;
     pause_init(engine, data);
+}
+
+static void init_game_map(game_data_t *data)
+{
+    memcpy(data->map, WORLD_MAP, sizeof(data->map));
+}
+
+void game_enter(engine_t *engine)
+{
+    game_data_t *data = (game_data_t *) engine->scene->data;
+
+    if (!data)
+        return;
+    init_game_map(data);
+    init_game_state(engine, data);
+    init_game_window(engine, data);
     if (init_hud(engine, data) == ERROR)
         return;
 }
