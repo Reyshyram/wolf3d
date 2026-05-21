@@ -38,6 +38,16 @@ void init_setting_btn(ui_button_t *button, engine_t *engine,
     button->data = engine;
 }
 
+ui_button_t *destroy_text_btn(ui_button_t *button)
+{
+    if (button->background)
+        sfRectangleShape_destroy(button->background);
+    if (button->text)
+        sfText_destroy(button->text);
+    free(button);
+    return nullptr;
+}
+
 ui_button_t *create_text_btn(engine_t *engine, sfVector2f *pos,
     sfVector2f *size, const char *label)
 {
@@ -48,10 +58,8 @@ ui_button_t *create_text_btn(engine_t *engine, sfVector2f *pos,
         return nullptr;
     button->background = sfRectangleShape_create();
     button->text = sfText_create();
-    if (!button->background || !button->text) {
-        destroy_text_btn(button);
-        return nullptr;
-    }
+    if (!button->background || !button->text)
+        return destroy_text_btn(button);
     sfRectangleShape_setPosition(button->background, *pos);
     sfRectangleShape_setSize(button->background, *size);
     sfRectangleShape_setFillColor(button->background,
@@ -62,13 +70,4 @@ ui_button_t *create_text_btn(engine_t *engine, sfVector2f *pos,
     button->char_size = 14;
     ui_button_set_text(button, label, 14, &color);
     return button;
-}
-
-void destroy_text_btn(ui_button_t *button)
-{
-    if (button->background)
-        sfRectangleShape_destroy(button->background);
-    if (button->text)
-        sfText_destroy(button->text);
-    free(button);
 }

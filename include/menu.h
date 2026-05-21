@@ -92,7 +92,7 @@ void init_setting_btn(ui_button_t *button, engine_t *engine,
     void (*on_click)(void *), const char *label);
 ui_button_t *create_text_btn(engine_t *engine, sfVector2f *pos,
     sfVector2f *size, const char *label);
-void destroy_text_btn(ui_button_t *button);
+ui_button_t *destroy_text_btn(ui_button_t *button);
 void set_pause_page(engine_t *engine, pause_page_t page);
 void set_button_state(ui_button_t *button, const char *label,
     bool enabled);

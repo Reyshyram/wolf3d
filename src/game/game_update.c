@@ -162,6 +162,17 @@ static void handle_speed_modifiers(game_data_t *d, float *speed_mult)
         *speed_mult /= 2;
 }
 
+static void handle_player_movement(game_data_t *d,
+    float speed_mult, sfVector2f *movement)
+{
+    if (!d->sounds_enabled) {
+        sfSound_pause(d->player.steps);
+    } else if (sfSound_getStatus(d->player.steps) != sfPlaying) {
+        sfSound_play(d->player.steps);
+    }
+    move_player(d, movement->x * speed_mult, movement->y * speed_mult);
+}
+
 static void handle_player(engine_t *engine, game_data_t *d)
 {
     sfVector2f movement = {0};
@@ -173,12 +184,7 @@ static void handle_player(engine_t *engine, game_data_t *d)
     d->camera_plane.y = d->camera_plane_base.y * d->fov;
     movement = get_player_movement(engine->dt, d);
     if (movement.x != 0 || movement.y != 0) {
-        if (!d->sounds_enabled) {
-            sfSound_pause(d->player.steps);
-        } else if (sfSound_getStatus(d->player.steps) != sfPlaying) {
-            sfSound_play(d->player.steps);
-        }
-        move_player(d, movement.x * speed_mult, movement.y * speed_mult);
+        handle_player_movement(d, speed_mult, &movement);
     } else {
         sfSound_pause(d->player.steps);
     }
