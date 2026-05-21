@@ -16,9 +16,9 @@
     #include <stdlib.h>
 
     #include "graphics/engine.h"
-    #include "graphics/sprite_anim.h"
 
     #include "weapons.h"
+    #include "menu.h"
 
     #define MAP_HEIGHT 24
     #define MAP_WIDTH 24
@@ -99,6 +99,8 @@ typedef struct hud_s {
     sfFont *hud_font;
     sfSprite *ammo_sprite;
     sfText *ammo_text;
+    bool show_minimap;
+    bool show_timer;
 } hud_t;
 
 typedef struct {
@@ -122,10 +124,14 @@ typedef struct game_s {
     float fov;
     float target_fov;
     float bobbing_clock;
+    bool sounds_enabled;
     hud_t *hud;
     weapon_t weapons[WEAPON_SLOT_COUNT];
     int active_weapon;
     float recoil_vel;
+    bool is_paused;
+    bool is_fr;
+    pause_menu_t pause;
 } game_data_t;
 
 typedef struct ray_s {
@@ -159,6 +165,8 @@ void game_draw(engine_t *engine);
 void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
 void game_on_resize(engine_t *engine);
+
+void switch_fullscreen(engine_t *engine);
 
 void cast_wall_ray(engine_t *engine, game_data_t *d, size_t x);
 void draw_floor_and_ceil(engine_t *engine, game_data_t *d);

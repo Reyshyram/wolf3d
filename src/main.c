@@ -18,21 +18,21 @@
 
 #include "game.h"
 #include "wolf3d.h"
+#include "menu.h"
 
 static void run_game(engine_t *engine)
 {
-    scene_t *game_scene = game_create();
+    scene_t *menu_scene = menu_create();
 
-    if (!game_scene) {
-        fprintf(stderr, "Error: failed to create the game scene\n");
+    if (!menu_scene) {
+        fprintf(stderr, "Error: failed to create the menu scene\n");
         return;
     }
     srand(time(nullptr));
-    sfRenderWindow_setMouseCursorGrabbed(engine->window, true);
 #ifndef DEBUG
     sfRenderWindow_setFramerateLimit(engine->window, FPS);
 #endif
-    engine_set_scene(engine, game_scene, false);
+    engine_set_scene(engine, menu_scene, false);
     sfMusic_play(resources_load_music(engine->resources, MUSIC_PATH));
     engine_main_loop(engine);
     engine_destroy(engine);

@@ -5,12 +5,18 @@
 ** menu_update
 */
 
+#include "graphics/engine.h"
+#include "graphics/resources.h"
+#include "graphics/sprite_anim.h"
+#include "menu.h"
+#include "wolf3d.h"
 #include <stdlib.h>
 
-#include "graphics/engine.h"
-#include "graphics/ui.h"
-#include "graphics/resources.h"
+void menu_update(engine_t *engine)
+{
+    menu_data_t *data = engine->scene->data;
 
-#include "game.h"
-
-
+    ui_button_update(engine, data->play_btn);
+    ui_button_update(engine, data->exit_btn);
+    sprite_anim_update(data->logo, engine->dt);
+}

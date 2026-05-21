@@ -21,7 +21,7 @@
 #include "graphics/resources.h"
 
 #include "game.h"
-#include "graphics/engine.h"
+#include "menu.h"
 #include "weapons.h"
 #include "wolf3d.h"
 
@@ -108,8 +108,10 @@ static void init_player(engine_t *engine, game_data_t *data)
     sfSound_setLoop(data->player.steps, true);
 }
 
-static void init_rendering(engine_t *engine, game_data_t *data)
+static void init_game_state(engine_t *engine, game_data_t *data)
 {
+    init_player(engine, data);
+    data->sounds_enabled = true;
     data->rays = sfVertexArray_create();
     sfVertexArray_resize(data->rays, (size_t) engine->window_size.x * 2);
     sfVertexArray_setPrimitiveType(data->rays, sfLines);
@@ -119,6 +121,21 @@ static void init_rendering(engine_t *engine, game_data_t *data)
         engine->window_size.y, false);
     set_up_floor_ceil(engine, data);
     init_vignette_shader(engine, data);
+    data->is_fr = true;
+}
+
+static void init_game_window(engine_t *engine, game_data_t *data)
+{
+    sfRenderWindow_setMouseCursorVisible(engine->window, false);
+    sfMouse_setPositionRenderWindow(
+        (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
+    data->is_paused = false;
+    pause_init(engine, data);
+}
+
+static void init_game_map(game_data_t *data)
+{
+    memcpy(data->map, WORLD_MAP, sizeof(data->map));
 }
 
 void game_enter(engine_t *engine)
@@ -127,13 +144,9 @@ void game_enter(engine_t *engine)
 
     if (!data)
         return;
-    memcpy(data->map, WORLD_MAP, sizeof(data->map));
-    init_player(engine, data);
-    init_rendering(engine, data);
-    sfRenderWindow_setMouseCursorVisible(engine->window, false);
-    sfMouse_setPositionRenderWindow(
-        (sfVector2i) {engine->window_size.x / 2, engine->window_size.y / 2},
-        engine->window);
+    init_game_map(data);
+    init_game_state(engine, data);
+    init_game_window(engine, data);
     if (init_hud(engine, data) == ERROR)
         return;
     if (init_weapons(engine, data, DEFAULT_MAIN_WEAPON) == ERROR)

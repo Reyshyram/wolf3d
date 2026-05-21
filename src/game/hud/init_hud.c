@@ -110,10 +110,11 @@ int init_hud(engine_t *engine, game_data_t *data)
     unsigned int mini_map_size =
         (unsigned int) (view_width < view_height ? view_width : view_height);
 
-    data->hud = malloc(sizeof(hud_t));
+    data->hud = calloc(1, sizeof(hud_t));
     if (!data->hud)
         return ERROR;
-    memset(data->hud, 0, sizeof(*data->hud));
+    data->hud->show_minimap = true;
+    data->hud->show_timer = true;
     if (!init_minimap(data->hud, mini_map_size)
         || !init_ammo_texts(engine, data->hud)
         || !init_timer(engine, data->hud) || !init_cursor(engine, data->hud)

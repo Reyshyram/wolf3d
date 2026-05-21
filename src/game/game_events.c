@@ -16,7 +16,7 @@
 #include "weapons.h"
 #include "wolf3d.h"
 
-static void switch_fullscreen(engine_t *engine)
+void switch_fullscreen(engine_t *engine)
 {
     bool activate_fullscreen = !engine->is_fullscreen;
     sfVideoMode video_mode;
@@ -49,6 +49,17 @@ static void weapons_events(game_data_t *d, sfEvent *event)
         weapon_change(d);
 }
 
+static void handle_escape(engine_t *engine, game_data_t *data)
+{
+    if (data->is_paused && data->pause.page != PAUSE_PAGE_MAIN) {
+        data->pause.page = PAUSE_PAGE_MAIN;
+        return;
+    }
+    data->is_paused = !data->is_paused;
+    sfRenderWindow_setMouseCursorVisible(engine->window, data->is_paused);
+    sfRenderWindow_setMouseCursorGrabbed(engine->window, !data->is_paused);
+}
+
 void game_event(engine_t *engine, sfEvent *event)
 {
     game_data_t *data = (game_data_t *) engine->scene->data;
@@ -56,7 +67,11 @@ void game_event(engine_t *engine, sfEvent *event)
     if (!data || !event)
         return;
     if (event->type == sfEvtKeyPressed && event->key.code == sfKeyEscape)
-        sfRenderWindow_close(engine->window);
+        handle_escape(engine, data);
+    if (data->is_paused) {
+        pause_events(engine, data, event);
+        return;
+    }
     if (event->type == sfEvtMouseButtonPressed
         && event->mouseButton.button == sfMouseRight)
         data->player.is_zooming = true;

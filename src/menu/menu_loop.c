@@ -7,8 +7,9 @@
 
 #include <stdlib.h>
 #include "graphics/engine.h"
-#include "graphics/ui.h"
+#include "graphics/resources.h"
 #include "menu.h"
+#include "wolf3d.h"
 
 void handle_menu_events(engine_t *engine, sfEvent *event)
 {
@@ -16,13 +17,4 @@ void handle_menu_events(engine_t *engine, sfEvent *event)
 
     ui_button_events(data->play_btn, event, engine);
     ui_button_events(data->exit_btn, event, engine);
-}
-
-void menu_on_exit(engine_t *engine)
-{
-    menu_data_t *data = engine->scene->data;
-
-    sfSprite_destroy(data->bg);
-    ui_button_destroy(data->play_btn);
-    ui_button_destroy(data->exit_btn);
 }

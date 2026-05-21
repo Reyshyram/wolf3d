@@ -16,6 +16,7 @@
 #include "graphics/maths.h"
 #include "graphics/sprite_anim.h"
 
+#include "menu.h"
 #include "game.h"
 #include "weapons.h"
 
@@ -124,7 +125,7 @@ static sfVector2f get_player_movement(float dt, game_data_t *d)
 {
     sfVector2f dir = {0};
 
-    if (sfKeyboard_isKeyPressed(sfKeyZ)) {
+    if (sfKeyboard_isKeyPressed(d->is_fr ? sfKeyZ : sfKeyW)) {
         dir.x += d->player.view_dir.x;
         dir.y += d->player.view_dir.y;
     }
@@ -132,7 +133,7 @@ static sfVector2f get_player_movement(float dt, game_data_t *d)
         dir.x -= d->player.view_dir.x;
         dir.y -= d->player.view_dir.y;
     }
-    if (sfKeyboard_isKeyPressed(sfKeyQ)) {
+    if (sfKeyboard_isKeyPressed(d->is_fr ? sfKeyQ : sfKeyA)) {
         dir.x += -d->player.view_dir.y;
         dir.y += d->player.view_dir.x;
     }
@@ -162,6 +163,17 @@ static void handle_speed_modifiers(game_data_t *d, float *speed_mult)
         *speed_mult /= 2;
 }
 
+static void handle_player_movement(game_data_t *d,
+    float speed_mult, sfVector2f *movement)
+{
+    if (!d->sounds_enabled) {
+        sfSound_pause(d->player.steps);
+    } else if (sfSound_getStatus(d->player.steps) != sfPlaying) {
+        sfSound_play(d->player.steps);
+    }
+    move_player(d, movement->x * speed_mult, movement->y * speed_mult);
+}
+
 static void handle_player(engine_t *engine, game_data_t *d)
 {
     sfVector2f movement = {0};
@@ -173,9 +185,7 @@ static void handle_player(engine_t *engine, game_data_t *d)
     d->camera_plane.y = d->camera_plane_base.y * d->fov;
     movement = get_player_movement(engine->dt, d);
     if (movement.x != 0 || movement.y != 0) {
-        if (sfSound_getStatus(d->player.steps) != sfPlaying)
-            sfSound_play(d->player.steps);
-        move_player(d, movement.x * speed_mult, movement.y * speed_mult);
+        handle_player_movement(d, speed_mult, &movement);
     } else {
         sfSound_pause(d->player.steps);
     }
@@ -190,6 +200,10 @@ void game_update(engine_t *engine)
 #ifdef DEBUG
     print_framerate();
 #endif
+    if (d->is_paused) {
+        pause_update(engine, d);
+        return;
+    }
     handle_player(engine, d);
     update_weapons(engine, d);
     d->fov = interpolatef(d->fov,

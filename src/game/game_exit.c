@@ -15,6 +15,7 @@
 #include "graphics/engine.h"
 
 #include "game.h"
+#include "menu.h"
 #include "weapons.h"
 
 void game_exit(engine_t *engine)
@@ -34,6 +35,7 @@ void game_exit(engine_t *engine)
     sfRenderTexture_destroy(data->render_texture);
     free_hud(data->hud);
     free_weapons(data);
+    pause_destroy(data);
     free(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, true);
 }
