@@ -134,8 +134,6 @@ void game_enter(engine_t *engine)
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {engine->window_size.x / 2, engine->window_size.y / 2},
         engine->window);
-    data->render_texture = sfRenderTexture_create(engine->window_size.x,
-        engine->window_size.y, false);
     if (init_hud(engine, data) == ERROR)
         return;
     if (init_weapons(engine, data, DEFAULT_MAIN_WEAPON) == ERROR)

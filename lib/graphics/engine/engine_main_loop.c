@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Color.h>
 #include <SFML/Graphics/RectangleShape.h>
 #include <SFML/Graphics/RenderWindow.h>
+#include <SFML/Graphics/View.h>
 #include <SFML/System/Clock.h>
 #include <SFML/System/Time.h>
 #include <SFML/Window/Event.h>
@@ -71,6 +72,7 @@ static void handle_resize(engine_t *engine, sfEvent *event)
     sfRenderWindow_setView(engine->window, view);
     if (engine->scene && engine->scene->on_resize)
         engine->scene->on_resize(engine);
+    sfView_destroy(view);
 }
 
 static void handle_events(engine_t *engine)
