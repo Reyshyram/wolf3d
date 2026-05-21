@@ -21,8 +21,9 @@ void init_buttons(engine_t *engine, menu_data_t *data)
             engine->resources, "assets/sprites/main_menu/button_play.png"));
     sfVector2f size = {350.0F,
         350.0F * (float) text_size.y / (float) text_size.x};
-    sfVector2f pos_p = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F - 20.0F};
-    sfVector2f pos_e = {WIN_WIDTH / 2.0F, pos_p.y + size.y + 40.0F};
+    sfVector2f pos_p = {engine->window_size.x / 2.0F,
+        engine->window_size.y / 2.0F - 20.0F};
+    sfVector2f pos_e = {engine->window_size.x / 2.0F, pos_p.y + size.y + 40.0F};
 
     data->play_btn = ui_button_create(engine,
         "assets/sprites/main_menu/button_play.png", &pos_p, &size);
@@ -46,17 +47,17 @@ void init_sprites(engine_t *engine, menu_data_t *data)
     data->bg = sfSprite_create();
     sfSprite_setTexture(data->bg, texture_bg, sfTrue);
     sfSprite_setScale(data->bg,
-        (sfVector2f) {(float) WIN_WIDTH / (float) bg_size.x,
-            (float) WIN_HEIGHT / (float) bg_size.y});
+        (sfVector2f) {(float) engine->window_size.x / (float) bg_size.x,
+            (float) engine->window_size.y / (float) bg_size.y});
     data->logo =
         sprite_anim_create("assets/sprites/main_menu/logo.png", &info, engine);
     sfSprite_setOrigin(data->logo->sprite,
         (sfVector2f) {LOGO_WIDTH / 2.0F, LOGO_HEIGHT / 2.0F});
     sfSprite_setScale(data->logo->sprite,
-        (sfVector2f) {(float) WIN_WIDTH / LOGO_WIDTH * 0.65F,
-            (float) WIN_WIDTH / LOGO_WIDTH * 0.65F});
+        (sfVector2f) {(float) engine->window_size.x / LOGO_WIDTH * 0.65F,
+            (float) engine->window_size.x / LOGO_WIDTH * 0.65F});
     sfSprite_setPosition(data->logo->sprite,
-        (sfVector2f) {WIN_WIDTH / 2.0F, 150.0F});
+        (sfVector2f) {engine->window_size.x / 2.0F, 150.0F});
 }
 
 scene_t *menu_create(void)

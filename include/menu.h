@@ -43,10 +43,8 @@ typedef struct pause_menu {
     ui_button_t *controls;
     ui_button_t *sounds;
     ui_button_t *hud;
-    ui_button_t *back;
     ui_button_t *controls_move;
-    ui_button_t *controls_camera;
-    ui_button_t *controls_pause;
+    ui_button_t *win_mode;
     ui_button_t *sound_master;
     ui_button_t *sound_steps;
     ui_button_t *hud_minimap;
@@ -71,7 +69,6 @@ void on_exit_click(void *data);
 void pause_on_resume(void *data);
 void pause_on_save(void *data);
 void pause_on_exit(void *data);
-void pause_on_back(void *data);
 void pause_init(engine_t *engine, game_data_t *data);
 void pause_destroy(game_data_t *data);
 void draw_btn(engine_t *engine, ui_button_t *button);
@@ -84,15 +81,12 @@ void pause_on_sound_master(void *data);
 void pause_on_sound_steps(void *data);
 void pause_on_hud_minimap(void *data);
 void pause_on_hud_timer(void *data);
+void pause_on_controls_keys(void *data);
+void pause_on_controls_resize(void *data);
 void pause_update(engine_t *engine, game_data_t *data);
 // Utils
 ui_button_t *create_btn(engine_t *engine, const char *tex,
     sfVector2f *pos);
-void init_setting_btn(ui_button_t *button, engine_t *engine,
-    void (*on_click)(void *), const char *label);
-ui_button_t *create_text_btn(engine_t *engine, sfVector2f *pos,
-    sfVector2f *size, const char *label);
-ui_button_t *destroy_text_btn(ui_button_t *button);
 void set_pause_page(engine_t *engine, pause_page_t page);
 void set_button_state(ui_button_t *button, const char *label,
     bool enabled);

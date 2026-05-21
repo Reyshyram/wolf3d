@@ -24,13 +24,13 @@ static void handle_main_events(engine_t *engine, game_data_t *data,
 static void handle_controls_events(engine_t *engine, game_data_t *data,
     sfEvent *event)
 {
-    ui_button_events(data->pause.back, event, engine);
+    ui_button_events(data->pause.controls_move, event, engine);
+    ui_button_events(data->pause.win_mode, event, engine);
 }
 
 static void handle_sounds_events(engine_t *engine, game_data_t *data,
     sfEvent *event)
 {
-    ui_button_events(data->pause.back, event, engine);
     ui_button_events(data->pause.sound_master, event, engine);
     ui_button_events(data->pause.sound_steps, event, engine);
 }
@@ -38,7 +38,6 @@ static void handle_sounds_events(engine_t *engine, game_data_t *data,
 static void handle_hud_events(engine_t *engine, game_data_t *data,
     sfEvent *event)
 {
-    ui_button_events(data->pause.back, event, engine);
     ui_button_events(data->pause.hud_minimap, event, engine);
     ui_button_events(data->pause.hud_timer, event, engine);
 }

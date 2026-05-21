@@ -30,5 +30,7 @@ void pause_on_exit(void *data)
 {
     engine_t *engine = data;
 
+    if (engine->is_fullscreen)
+        switch_fullscreen(engine);
     engine_set_scene(engine, menu_create(), true);
 }

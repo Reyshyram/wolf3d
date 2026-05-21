@@ -20,10 +20,8 @@ void pause_destroy(game_data_t *data)
     ui_button_destroy(data->pause.controls);
     ui_button_destroy(data->pause.sounds);
     ui_button_destroy(data->pause.hud);
-    ui_button_destroy(data->pause.back);
     ui_button_destroy(data->pause.controls_move);
-    ui_button_destroy(data->pause.controls_camera);
-    ui_button_destroy(data->pause.controls_pause);
+    ui_button_destroy(data->pause.win_mode);
     ui_button_destroy(data->pause.sound_master);
     ui_button_destroy(data->pause.sound_steps);
     ui_button_destroy(data->pause.hud_minimap);

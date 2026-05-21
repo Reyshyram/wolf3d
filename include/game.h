@@ -130,6 +130,7 @@ typedef struct game_s {
     int active_weapon;
     float recoil_vel;
     bool is_paused;
+    bool is_fr;
     pause_menu_t pause;
 } game_data_t;
 
@@ -164,6 +165,8 @@ void game_draw(engine_t *engine);
 void game_update(engine_t *engine);
 void game_event(engine_t *engine, sfEvent *event);
 void game_on_resize(engine_t *engine);
+
+void switch_fullscreen(engine_t *engine);
 
 void cast_wall_ray(engine_t *engine, game_data_t *d, size_t x);
 void draw_floor_and_ceil(engine_t *engine, game_data_t *d);

@@ -22,19 +22,20 @@ static void init_pause_bg(engine_t *engine, pause_menu_t *pause)
     pause->bg = sfSprite_create();
     sfSprite_setTexture(pause->bg, texture, sfTrue);
     sfSprite_setScale(pause->bg,
-        (sfVector2f) {(float) WIN_WIDTH / (float) text_size.x,
-            (float) WIN_HEIGHT / (float) text_size.y});
+        (sfVector2f) {(float) engine->window_size.x / (float) text_size.x,
+            (float) engine->window_size.y / (float) text_size.y});
     pause->separator = sfRectangleShape_create();
     sfRectangleShape_setSize(pause->separator, (sfVector2f) {4.0F, 500.0F});
     sfRectangleShape_setFillColor(pause->separator, line_c);
     sfRectangleShape_setOrigin(pause->separator, (sfVector2f) {2.0F, 250.0F});
-    sfRectangleShape_setPosition(pause->separator,
-        (sfVector2f) {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F});
+    sfRectangleShape_setPosition(pause->separator, (sfVector2f)
+        {engine->window_size.x / 2.0F, engine->window_size.y / 2.0F});
 }
 
 static void init_main_left(engine_t *engine, pause_menu_t *pause)
 {
-    sfVector2f left = {WIN_WIDTH / 2.0F - 250.0F, WIN_HEIGHT / 2.0F - 100.0F};
+    sfVector2f left = {engine->window_size.x / 2.0F - 250.0F,
+        engine->window_size.y / 2.0F - 100.0F};
 
     pause->resume = create_btn(engine,
         "assets/sprites/main_menu/button_resume.png", &left);
@@ -54,8 +55,8 @@ static void init_main_left(engine_t *engine, pause_menu_t *pause)
 
 static void init_main_right(engine_t *engine, pause_menu_t *pause)
 {
-    sfVector2f right = {WIN_WIDTH / 2.0F + 250.0F,
-        WIN_HEIGHT / 2.0F - 100.0F};
+    sfVector2f right = {engine->window_size.x / 2.0F + 250.0F,
+        engine->window_size.y / 2.0F - 100.0F};
 
     pause->controls = create_btn(engine,
         "assets/sprites/main_menu/button_keys.png", &right);
@@ -75,59 +76,58 @@ static void init_main_right(engine_t *engine, pause_menu_t *pause)
 
 static void init_controls_page(engine_t *engine, pause_menu_t *pause)
 {
-    sfVector2f size = {180.0F, 48.0F};
-    sfVector2f left = {WIN_WIDTH / 2.0F - 230.0F, WIN_HEIGHT / 2.0F - 60.0F};
-    sfVector2f right = {WIN_WIDTH / 2.0F + 230.0F,
-        WIN_HEIGHT / 2.0F - 60.0F};
-    sfVector2f bottom = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F + 50.0F};
+    sfVector2f keys_pos = {engine->window_size.x / 4.0F,
+        engine->window_size.y / 2.0F};
+    sfVector2f zoom_pos = {(engine->window_size.x / 4.0F) * 3.F,
+        engine->window_size.y / 2.0F};
 
-    pause->controls_move = create_text_btn(engine, &left, &size, "ZQSD / WASD");
-    pause->controls_camera = create_text_btn(engine, &right, &size, "Souris");
-    pause->controls_pause = create_text_btn(engine, &bottom, &size, "Echap");
+    pause->controls_move = create_btn(engine,
+        "assets/sprites/main_menu/button_fr.png", &keys_pos);
+    pause->controls_move->on_click = &pause_on_controls_keys;
+    pause->controls_move->data = engine;
+    pause->win_mode = create_btn(engine,
+        "assets/sprites/main_menu/button_resize.png", &zoom_pos);
+    pause->win_mode->on_click = &pause_on_controls_resize;
+    pause->win_mode->data = engine;
 }
 
 static void init_sounds_page(engine_t *engine, pause_menu_t *pause)
 {
-    sfVector2f size = {220.0F, 48.0F};
-    sfVector2f master = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F - 40.0F};
-    sfVector2f steps = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F + 70.0F};
+    sfVector2f master_pos = {engine->window_size.x / 4.0F,
+        engine->window_size.y / 2.0F};
+    sfVector2f steps_pos = {(engine->window_size.x / 4.0F) * 3.F,
+        engine->window_size.y / 2.0F};
 
-    pause->sound_master = create_text_btn(engine, &master, &size, "Sons");
-    pause->sound_steps = create_text_btn(engine, &steps, &size, "Pas");
-    init_setting_btn(pause->sound_master, engine, &pause_on_sound_master,
-        "Sons: ON");
-    init_setting_btn(pause->sound_steps, engine, &pause_on_sound_steps,
-        "Pas: ON");
+    pause->sound_master = create_btn(engine,
+        "assets/sprites/main_menu/button_master_vol.png", &master_pos);
+    pause->sound_master->on_click = &pause_on_sound_master;
+    pause->sound_master->data = engine;
+    pause->sound_steps = create_btn(engine,
+        "assets/sprites/main_menu/button_steps_vol.png", &steps_pos);
+    pause->sound_steps->on_click = &pause_on_sound_steps;
+    pause->sound_steps->data = engine;
 }
 
 static void init_hud_page(engine_t *engine, pause_menu_t *pause)
 {
-    sfVector2f size = {220.0F, 48.0F};
-    sfVector2f minimap = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F - 40.0F};
-    sfVector2f timer = {WIN_WIDTH / 2.0F, WIN_HEIGHT / 2.0F + 70.0F};
+    sfVector2f map_pos = {engine->window_size.x / 4.0F,
+        engine->window_size.y / 2.0F};
+    sfVector2f time_pos = {(engine->window_size.x / 4.0F) * 3.F,
+        engine->window_size.y / 2.0F};
 
-    pause->hud_minimap = create_text_btn(engine, &minimap, &size, "Mini-map");
-    pause->hud_timer = create_text_btn(engine, &timer, &size, "Timer");
-    init_setting_btn(pause->hud_minimap, engine, &pause_on_hud_minimap,
-        "Mini-map: ON");
-    init_setting_btn(pause->hud_timer, engine, &pause_on_hud_timer,
-        "Timer: ON");
-}
-
-static void init_back_button(engine_t *engine, pause_menu_t *pause)
-{
-    sfVector2f back = {150.0F, 90.0F};
-    sfVector2f size = {150.0F, 44.0F};
-
-    pause->back = create_text_btn(engine, &back, &size, "Retour");
-    pause->back->on_click = &pause_on_back;
-    pause->back->data = engine;
+    pause->hud_minimap = create_btn(engine,
+        "assets/sprites/main_menu/button_map_ok.png", &map_pos);
+    pause->hud_minimap->on_click = &pause_on_hud_minimap;
+    pause->hud_minimap->data = engine;
+    pause->hud_timer = create_btn(engine,
+        "assets/sprites/main_menu/button_time_ok.png", &time_pos);
+    pause->hud_timer->on_click = &pause_on_hud_timer;
+    pause->hud_timer->data = engine;
 }
 
 void pause_init(engine_t *engine, game_data_t *data)
 {
     init_pause_bg(engine, &data->pause);
-    init_back_button(engine, &data->pause);
     init_main_left(engine, &data->pause);
     init_main_right(engine, &data->pause);
     init_controls_page(engine, &data->pause);

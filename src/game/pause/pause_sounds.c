@@ -30,10 +30,6 @@ void pause_on_sound_master(void *data)
     game_data->sounds_enabled = !game_data->sounds_enabled;
     if (!game_data->sounds_enabled)
         sfSound_pause(game_data->player.steps);
-    set_button_state(game_data->pause.sound_master, "Master",
-        game_data->sounds_enabled);
-    set_button_state(game_data->pause.sound_steps, "Pas",
-        game_data->sounds_enabled);
 }
 
 void pause_on_sound_steps(void *data)
@@ -43,11 +39,10 @@ void pause_on_sound_steps(void *data)
 
     if (!game_data)
         return;
-    game_data->sounds_enabled = !game_data->sounds_enabled;
-    if (!game_data->sounds_enabled)
+    if (!game_data->sounds_enabled) {
+        game_data->sounds_enabled = !game_data->sounds_enabled;
+        sfSound_play(game_data->player.steps);
+    } else {
         sfSound_pause(game_data->player.steps);
-    set_button_state(game_data->pause.sound_master, "Master",
-        game_data->sounds_enabled);
-    set_button_state(game_data->pause.sound_steps, "Pas",
-        game_data->sounds_enabled);
+    }
 }

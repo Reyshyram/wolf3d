@@ -16,7 +16,7 @@
 #include "weapons.h"
 #include "wolf3d.h"
 
-static void switch_fullscreen(engine_t *engine)
+void switch_fullscreen(engine_t *engine)
 {
     bool activate_fullscreen = !engine->is_fullscreen;
     sfVideoMode video_mode;

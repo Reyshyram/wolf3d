@@ -13,18 +13,14 @@
 static void pause_update_settings(engine_t *engine, game_data_t *d)
 {
     if (d->pause.page == PAUSE_PAGE_CONTROLS) {
-        ui_button_update(engine, d->pause.back);
         ui_button_update(engine, d->pause.controls_move);
-        ui_button_update(engine, d->pause.controls_camera);
-        ui_button_update(engine, d->pause.controls_pause);
+        ui_button_update(engine, d->pause.win_mode);
     }
     if (d->pause.page == PAUSE_PAGE_SOUNDS) {
-        ui_button_update(engine, d->pause.back);
         ui_button_update(engine, d->pause.sound_master);
         ui_button_update(engine, d->pause.sound_steps);
     }
     if (d->pause.page == PAUSE_PAGE_HUD) {
-        ui_button_update(engine, d->pause.back);
         ui_button_update(engine, d->pause.hud_minimap);
         ui_button_update(engine, d->pause.hud_timer);
     }

@@ -125,7 +125,7 @@ static sfVector2f get_player_movement(float dt, game_data_t *d)
 {
     sfVector2f dir = {0};
 
-    if (sfKeyboard_isKeyPressed(sfKeyZ)) {
+    if (sfKeyboard_isKeyPressed(d->is_fr ? sfKeyZ : sfKeyW)) {
         dir.x += d->player.view_dir.x;
         dir.y += d->player.view_dir.y;
     }
@@ -133,7 +133,7 @@ static sfVector2f get_player_movement(float dt, game_data_t *d)
         dir.x -= d->player.view_dir.x;
         dir.y -= d->player.view_dir.y;
     }
-    if (sfKeyboard_isKeyPressed(sfKeyQ)) {
+    if (sfKeyboard_isKeyPressed(d->is_fr ? sfKeyQ : sfKeyA)) {
         dir.x += -d->player.view_dir.y;
         dir.y += d->player.view_dir.x;
     }

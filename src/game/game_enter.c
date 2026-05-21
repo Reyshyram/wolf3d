@@ -121,6 +121,7 @@ static void init_game_state(engine_t *engine, game_data_t *data)
         engine->window_size.y, false);
     set_up_floor_ceil(engine, data);
     init_vignette_shader(engine, data);
+    data->is_fr = true;
 }
 
 static void init_game_window(engine_t *engine, game_data_t *data)

@@ -27,9 +27,16 @@ void pause_on_hud_minimap(void *data)
 
     if (!game_data || !game_data->hud)
         return;
+    if (game_data->hud->show_minimap == true) {
+        sfRectangleShape_setTexture(game_data->pause.hud_minimap->background,
+            resources_load_texture(engine->resources,
+                "assets/sprites/main_menu/button_map_ko.png"), sfTrue);
+    } else {
+        sfRectangleShape_setTexture(game_data->pause.hud_minimap->background,
+            resources_load_texture(engine->resources,
+                "assets/sprites/main_menu/button_map_ok.png"), sfTrue);
+    }
     game_data->hud->show_minimap = !game_data->hud->show_minimap;
-    set_button_state(game_data->pause.hud_minimap, "Mini-map",
-        game_data->hud->show_minimap);
 }
 
 void pause_on_hud_timer(void *data)
@@ -39,7 +46,14 @@ void pause_on_hud_timer(void *data)
 
     if (!game_data || !game_data->hud)
         return;
+    if (game_data->hud->show_timer == true) {
+        sfRectangleShape_setTexture(game_data->pause.hud_timer->background,
+            resources_load_texture(engine->resources,
+                "assets/sprites/main_menu/button_time_ko.png"), sfTrue);
+    } else {
+        sfRectangleShape_setTexture(game_data->pause.hud_timer->background,
+            resources_load_texture(engine->resources,
+                "assets/sprites/main_menu/button_time_ok.png"), sfTrue);
+    }
     game_data->hud->show_timer = !game_data->hud->show_timer;
-    set_button_state(game_data->pause.hud_timer, "Timer",
-        game_data->hud->show_timer);
 }
