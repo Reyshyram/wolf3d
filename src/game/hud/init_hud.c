@@ -57,6 +57,8 @@ int init_hud(engine_t *engine, game_data_t *data)
     if (!data->hud)
         return ERROR;
     memset(data->hud, 0, sizeof(*data->hud));
+    data->hud->show_minimap = true;
+    data->hud->show_timer = true;
     if (!init_minimap(data->hud, mini_map_size)
         || !init_timer(engine, data->hud)) {
         free_hud(data->hud);

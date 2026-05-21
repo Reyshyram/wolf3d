@@ -15,17 +15,25 @@
 #include "game.h"
 #include "graphics/engine.h"
 
+static void handle_escape(engine_t *engine, game_data_t *data)
+{
+    if (data->is_paused && data->pause.page != PAUSE_PAGE_MAIN) {
+        data->pause.page = PAUSE_PAGE_MAIN;
+        return;
+    }
+    data->is_paused = !data->is_paused;
+    sfRenderWindow_setMouseCursorVisible(engine->window, data->is_paused);
+    sfRenderWindow_setMouseCursorGrabbed(engine->window, !data->is_paused);
+}
+
 void game_event(engine_t *engine, sfEvent *event)
 {
     game_data_t *data = (game_data_t *) engine->scene->data;
 
     if (!data || !event)
         return;
-    if (event->type == sfEvtKeyPressed && event->key.code == sfKeyEscape) {
-        data->is_paused = !data->is_paused;
-        sfRenderWindow_setMouseCursorVisible(engine->window, data->is_paused);
-        sfRenderWindow_setMouseCursorGrabbed(engine->window, !data->is_paused);
-    }
+    if (event->type == sfEvtKeyPressed && event->key.code == sfKeyEscape)
+        handle_escape(engine, data);
     if (data->is_paused) {
         pause_events(engine, data, event);
         return;

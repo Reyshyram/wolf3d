@@ -80,8 +80,10 @@ void game_draw(engine_t *engine)
         return;
     draw_environment(engine, d);
     draw_vignette(engine, d);
-    view_mini_map(engine, d, d->hud);
-    draw_timer(engine, d->hud);
+    if (d->hud && d->hud->show_minimap)
+        view_mini_map(engine, d, d->hud);
+    if (d->hud && d->hud->show_timer)
+        draw_timer(engine, d->hud);
     if (d->is_paused) {
         pause_draw(engine, d);
     }

@@ -22,10 +22,28 @@ void pause_draw(engine_t *engine, game_data_t *data)
     sfRenderWindow_drawSprite(engine->window, data->pause.bg, NULL);
     sfRenderWindow_drawRectangleShape(engine->window, data->pause.separator,
         NULL);
-    draw_btn(engine, data->pause.resume);
-    draw_btn(engine, data->pause.save);
-    draw_btn(engine, data->pause.exit);
-    draw_btn(engine, data->pause.controls);
-    draw_btn(engine, data->pause.sounds);
-    draw_btn(engine, data->pause.hud);
+    if (data->pause.page == PAUSE_PAGE_MAIN) {
+        draw_btn(engine, data->pause.resume);
+        draw_btn(engine, data->pause.save);
+        draw_btn(engine, data->pause.exit);
+        draw_btn(engine, data->pause.controls);
+        draw_btn(engine, data->pause.sounds);
+        draw_btn(engine, data->pause.hud);
+    }
+    if (data->pause.page == PAUSE_PAGE_CONTROLS) {
+        draw_btn(engine, data->pause.back);
+        draw_btn(engine, data->pause.controls_move);
+        draw_btn(engine, data->pause.controls_camera);
+        draw_btn(engine, data->pause.controls_pause);
+    }
+    if (data->pause.page == PAUSE_PAGE_SOUNDS) {
+        draw_btn(engine, data->pause.back);
+        draw_btn(engine, data->pause.sound_master);
+        draw_btn(engine, data->pause.sound_steps);
+    }
+    if (data->pause.page == PAUSE_PAGE_HUD) {
+        draw_btn(engine, data->pause.back);
+        draw_btn(engine, data->pause.hud_minimap);
+        draw_btn(engine, data->pause.hud_timer);
+    }
 }

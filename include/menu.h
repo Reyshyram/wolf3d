@@ -26,15 +26,31 @@ typedef struct menu_data {
     ui_button_t *exit_btn;
 } menu_data_t;
 
+typedef enum pause_page {
+    PAUSE_PAGE_MAIN,
+    PAUSE_PAGE_CONTROLS,
+    PAUSE_PAGE_SOUNDS,
+    PAUSE_PAGE_HUD,
+} pause_page_t;
+
 typedef struct pause_menu {
     sfSprite *bg;
     sfRectangleShape *separator;
+    pause_page_t page;
     ui_button_t *resume;
     ui_button_t *save;
     ui_button_t *exit;
     ui_button_t *controls;
     ui_button_t *sounds;
     ui_button_t *hud;
+    ui_button_t *back;
+    ui_button_t *controls_move;
+    ui_button_t *controls_camera;
+    ui_button_t *controls_pause;
+    ui_button_t *sound_master;
+    ui_button_t *sound_steps;
+    ui_button_t *hud_minimap;
+    ui_button_t *hud_timer;
 } pause_menu_t;
 
 // Main_menu
@@ -55,6 +71,7 @@ void on_exit_click(void *data);
 void pause_on_resume(void *data);
 void pause_on_save(void *data);
 void pause_on_exit(void *data);
+void pause_on_back(void *data);
 void pause_init(engine_t *engine, game_data_t *data);
 void pause_destroy(game_data_t *data);
 void draw_btn(engine_t *engine, ui_button_t *button);
@@ -63,6 +80,10 @@ void pause_events(engine_t *engine, game_data_t *data, sfEvent *event);
 void pause_on_hud(void *data);
 void pause_on_sounds(void *data);
 void pause_on_controls(void *data);
+void pause_on_sound_master(void *data);
+void pause_on_sound_steps(void *data);
+void pause_on_hud_minimap(void *data);
+void pause_on_hud_timer(void *data);
 void pause_update(engine_t *engine, game_data_t *data);
 
 #endif /* !MENU_H_ */

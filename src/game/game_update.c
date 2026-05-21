@@ -173,8 +173,11 @@ static void handle_player(engine_t *engine, game_data_t *d)
     d->camera_plane.y = d->camera_plane_base.y * d->fov;
     movement = get_player_movement(engine->dt, d);
     if (movement.x != 0 || movement.y != 0) {
-        if (sfSound_getStatus(d->player.steps) != sfPlaying)
+        if (!d->sounds_enabled) {
+            sfSound_pause(d->player.steps);
+        } else if (sfSound_getStatus(d->player.steps) != sfPlaying) {
             sfSound_play(d->player.steps);
+        }
         move_player(d, movement.x * speed_mult, movement.y * speed_mult);
     } else {
         sfSound_pause(d->player.steps);

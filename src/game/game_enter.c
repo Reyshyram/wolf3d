@@ -109,6 +109,7 @@ static void init_player(engine_t *engine, game_data_t *data)
 static void init_game_state(engine_t *engine, game_data_t *data)
 {
     init_player(engine, data);
+    data->sounds_enabled = true;
     data->rays = sfVertexArray_create();
     sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
     sfVertexArray_setPrimitiveType(data->rays, sfLines);

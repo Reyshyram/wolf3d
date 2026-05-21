@@ -81,6 +81,8 @@ typedef struct hud_s {
     sfVector2u mini_map_size;
     sfText *timer;
     float timer_time;
+    bool show_minimap;
+    bool show_timer;
 } hud_t;
 
 typedef struct game_s {
@@ -98,6 +100,7 @@ typedef struct game_s {
     float fov;
     float target_fov;
     float bobbing_clock;
+    bool sounds_enabled;
     hud_t *hud;
     bool is_paused;
     pause_menu_t pause;
