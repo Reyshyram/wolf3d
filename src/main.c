@@ -5,6 +5,7 @@
 ** Main file for the program
 */
 
+#include <SFML/Audio/Music.h>
 #include <SFML/Graphics/RenderWindow.h>
 #include <SFML/Window/VideoMode.h>
 #include <stdio.h>
@@ -13,6 +14,7 @@
 #include <time.h>
 
 #include "graphics/engine.h"
+#include "graphics/resources.h"
 
 #include "game.h"
 #include "wolf3d.h"
@@ -31,6 +33,7 @@ static void run_game(engine_t *engine)
     sfRenderWindow_setFramerateLimit(engine->window, FPS);
 #endif
     engine_set_scene(engine, menu_scene, false);
+    sfMusic_play(resources_load_music(engine->resources, MUSIC_PATH));
     engine_main_loop(engine);
     engine_destroy(engine);
 }

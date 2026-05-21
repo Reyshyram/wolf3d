@@ -12,13 +12,15 @@
     #define UNUSED [[maybe_unused]]
 
     #define WIN_TITLE "Duckenstein"
-    #define WIN_HEIGHT 1080
-    #define WIN_WIDTH 1920
+    #define WIN_HEIGHT 720
+    #define WIN_WIDTH 1280
     #define FPS 60
 
     #define W_FAST 5500
     #define W_BASIC 40000
     #define W_SLOW 175000
+
+    #define MUSIC_PATH MUSICS_PATH "music.mp3"
 // clang-format on
 
 int print_help(void);

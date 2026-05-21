@@ -26,7 +26,7 @@
     #define ASSETS_PATH "assets/"
     #define FONTS_PATH ASSETS_PATH "fonts/"
     #define SPRITES_PATH ASSETS_PATH "sprites/"
-    #define MUSICS_PATHS ASSETS_PATH "musics/"
+    #define MUSICS_PATH ASSETS_PATH "musics/"
     #define SHADERS_PATH ASSETS_PATH "shaders/"
     #define SFXS_PATHS ASSETS_PATH "sfxs/"
 
@@ -53,6 +53,8 @@ struct engine {
     sfRenderWindow *window;
     sfCursor *cursor;
     sfVector2u window_size;
+    sfVector2u windowed_size;
+    bool is_fullscreen;
     sfClock *clock;
     float dt;
     sfFont *default_font;
@@ -67,6 +69,7 @@ struct engine {
 struct scene {
     void (*on_enter)(engine_t *engine);
     void (*on_exit)(engine_t *engine);
+    void (*on_resize)(engine_t *engine);
     void (*update)(engine_t *engine);
     void (*draw)(engine_t *engine);
     void (*handle_events)(engine_t *engine, sfEvent *event);

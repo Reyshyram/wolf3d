@@ -8,14 +8,12 @@
 #include <SFML/Audio/Sound.h>
 #include <SFML/Graphics/Glsl.h>
 #include <SFML/Graphics/PrimitiveType.h>
-#include <SFML/Graphics/Rect.h>
 #include <SFML/Graphics/RectangleShape.h>
 #include <SFML/Graphics/RenderTexture.h>
 #include <SFML/Graphics/RenderWindow.h>
 #include <SFML/Graphics/Shader.h>
 #include <SFML/Graphics/Types.h>
 #include <SFML/Graphics/VertexArray.h>
-#include <SFML/Graphics/View.h>
 #include <SFML/System/Vector2.h>
 #include <string.h>
 
@@ -24,6 +22,7 @@
 
 #include "game.h"
 #include "menu.h"
+#include "weapons.h"
 #include "wolf3d.h"
 
 static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {
@@ -53,14 +52,16 @@ static constexpr int WORLD_MAP[MAP_WIDTH][MAP_HEIGHT] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
-static void set_up_floor_ceil_shader(game_data_t *data, sfShader *s)
+static void set_up_floor_ceil_shader(engine_t *engine, game_data_t *data,
+    sfShader *s)
 {
     sfGlslVec2 textures_size = {NB_WALL_TEXTURES * WALL_TEXTURE_WIDTH,
         WALL_TEXTURE_HEIGHT};
 
     sfShader_setTextureUniform(s, "u_textures", data->wall_textures);
     sfShader_setVec2Uniform(s, "u_resolution",
-        (sfGlslVec2) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
+        (sfGlslVec2) {(float) engine->window_size.x,
+            (float) engine->window_size.y});
     sfShader_setVec2Uniform(s, "u_textures_size", textures_size);
     sfShader_setFloatUniform(s, "u_tile_size", (float) WALL_TEXTURE_WIDTH);
     sfShader_setFloatUniform(s, "u_floor_index", FLOOR_TILE_INDEX);
@@ -71,17 +72,17 @@ static void set_up_floor_ceil_shader(game_data_t *data, sfShader *s)
         FLASHLIGHT_MIN_LIGHT);
 }
 
-static void set_up_floor_ceil(game_data_t *data)
+static void set_up_floor_ceil(engine_t *engine, game_data_t *data)
 {
     data->floor_ceil_shader =
         sfShader_createFromFile(nullptr, nullptr, FLOOR_CEIL_SHADER_PATH);
     data->floor_ceil = sfRectangleShape_create();
     sfRectangleShape_setSize(data->floor_ceil,
-        (sfVector2f) {WIN_WIDTH, WIN_HEIGHT});
-    set_up_floor_ceil_shader(data, data->floor_ceil_shader);
+        (sfVector2f) {engine->window_size.x, engine->window_size.y});
+    set_up_floor_ceil_shader(engine, data, data->floor_ceil_shader);
 }
 
-static void init_vignette_shader(game_data_t *data)
+static void init_vignette_shader(engine_t *engine, game_data_t *data)
 {
     data->vignette_shader =
         sfShader_createFromFile(nullptr, nullptr, VIGNETTE_SHADER_PATH);
@@ -91,7 +92,8 @@ static void init_vignette_shader(game_data_t *data)
         VIGNETTE_OUTER_RADIUS);
     sfShader_setFloatUniform(data->vignette_shader, "u_alpha", VIGNETTE_ALPHA);
     sfShader_setVec2Uniform(data->vignette_shader, "u_resolution",
-        (sfGlslVec2) {(float) WIN_WIDTH, (float) WIN_HEIGHT});
+        (sfGlslVec2) {(float) engine->window_size.x,
+            (float) engine->window_size.y});
 }
 
 static void init_player(engine_t *engine, game_data_t *data)
@@ -111,12 +113,14 @@ static void init_game_state(engine_t *engine, game_data_t *data)
     init_player(engine, data);
     data->sounds_enabled = true;
     data->rays = sfVertexArray_create();
-    sfVertexArray_resize(data->rays, (size_t) WIN_WIDTH * 2);
+    sfVertexArray_resize(data->rays, (size_t) engine->window_size.x * 2);
     sfVertexArray_setPrimitiveType(data->rays, sfLines);
     data->wall_textures =
         resources_load_texture(engine->resources, WALL_TEXTURES_PATH);
-    set_up_floor_ceil(data);
-    init_vignette_shader(data);
+    data->render_texture = sfRenderTexture_create(engine->window_size.x,
+        engine->window_size.y, false);
+    set_up_floor_ceil(engine, data);
+    init_vignette_shader(engine, data);
 }
 
 static void init_game_window(engine_t *engine, game_data_t *data)
@@ -124,8 +128,6 @@ static void init_game_window(engine_t *engine, game_data_t *data)
     sfRenderWindow_setMouseCursorVisible(engine->window, false);
     sfMouse_setPositionRenderWindow(
         (sfVector2i) {WIN_WIDTH / 2, WIN_HEIGHT / 2}, engine->window);
-    data->render_texture =
-        sfRenderTexture_create(WIN_WIDTH, WIN_HEIGHT, false);
     data->is_paused = false;
     pause_init(engine, data);
 }
@@ -145,5 +147,7 @@ void game_enter(engine_t *engine)
     init_game_state(engine, data);
     init_game_window(engine, data);
     if (init_hud(engine, data) == ERROR)
+        return;
+    if (init_weapons(engine, data, DEFAULT_MAIN_WEAPON) == ERROR)
         return;
 }

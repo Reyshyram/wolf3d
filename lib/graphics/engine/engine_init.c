@@ -46,8 +46,11 @@ bool engine_init(engine_t *engine, const char *title, sfVideoMode *video_mode,
     if (!engine)
         return false;
     memset(engine, 0, sizeof(*engine));
+    engine->is_fullscreen = is_fullscreen;
+    engine->windowed_size =
+        (sfVector2u) {video_mode->width, video_mode->height};
     engine->window = sfRenderWindow_create(*video_mode, title,
-        sfClose | (is_fullscreen ? sfFullscreen : 0), nullptr);
+        sfClose | sfResize | (is_fullscreen ? sfFullscreen : 0), nullptr);
     if (!engine->window)
         return false;
     engine->window_size = (sfVector2u) {video_mode->width, video_mode->height};

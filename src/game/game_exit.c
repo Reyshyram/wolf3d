@@ -10,12 +10,13 @@
 #include <SFML/Graphics/RenderWindow.h>
 #include <SFML/Graphics/Shader.h>
 #include <SFML/Graphics/VertexArray.h>
-#include <SFML/Graphics/View.h>
 #include <stdlib.h>
 
-#include "menu.h"
-#include "game.h"
 #include "graphics/engine.h"
+
+#include "game.h"
+#include "menu.h"
+#include "weapons.h"
 
 void game_exit(engine_t *engine)
 {
@@ -25,12 +26,15 @@ void game_exit(engine_t *engine)
         return;
     if (data->floor_ceil_shader)
         sfShader_destroy(data->floor_ceil_shader);
+    if (data->vignette_shader)
+        sfShader_destroy(data->vignette_shader);
     if (data->rays)
         sfVertexArray_destroy(data->rays);
     if (data->floor_ceil)
         sfRectangleShape_destroy(data->floor_ceil);
     sfRenderTexture_destroy(data->render_texture);
     free_hud(data->hud);
+    free_weapons(data);
     pause_destroy(data);
     free(data);
     sfRenderWindow_setMouseCursorVisible(engine->window, true);

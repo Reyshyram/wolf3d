@@ -16,9 +16,10 @@
 #include "wolf3d.h"
 
 // clang-format off
-static void init_raycast_struct(game_data_t *d, size_t x, ray_t *ray)
+static void init_raycast_struct(engine_t *engine,
+    game_data_t *d, size_t x, ray_t *ray)
 {
-    float camera_plane_x = 2.F * (float) x / (float) WIN_WIDTH - 1;
+    float camera_plane_x = 2.F * (float) x / (float) engine->window_size.x - 1;
     sfVector2f ray_dir = {d->player.view_dir.x
         + d->camera_plane.x * camera_plane_x,
         d->player.view_dir.y + d->camera_plane.y * camera_plane_x};
@@ -96,19 +97,19 @@ static float get_flashlight_mult(game_data_t *d, ray_t *ray)
     return fminf(light, 1);
 }
 
-static void get_wall_info(ray_t *ray, game_data_t *d)
+static void get_wall_info(engine_t *engine, ray_t *ray, game_data_t *d)
 {
     ray->camera_plane_length = hypotf(d->camera_plane.x, d->camera_plane.y);
-    ray->line_height = (int) ((WALL_HEIGHT_MULT * WIN_WIDTH)
+    ray->line_height = (int) ((WALL_HEIGHT_MULT * engine->window_size.x)
         / (2 * ray->camera_plane_length * ray->perpendicular_dist));
-    ray->horizon_y = WIN_HEIGHT / 2 + (int) d->camera_height;
+    ray->horizon_y = engine->window_size.y / 2 + (int) d->camera_height;
     ray->draw_start_y = -ray->line_height / 2 + ray->horizon_y;
     ray->line_start = ray->draw_start_y;
     if (ray->line_start < 0)
         ray->line_start = 0;
     ray->line_end = ray->line_height / 2 + ray->horizon_y;
-    if (ray->line_end > WIN_HEIGHT)
-        ray->line_end = WIN_HEIGHT;
+    if (ray->line_end > (int)engine->window_size.y)
+        ray->line_end = engine->window_size.y;
     ray->wall_hit_coord =
         (ray->was_x_side_hit ? d->player.pos.y : d->player.pos.x)
         + ray->perpendicular_dist
@@ -150,14 +151,14 @@ static void append_to_vertices(ray_t *ray, game_data_t *d, size_t x)
             {ray->texture_x, ray->texture_y_bottom}});
 }
 
-void cast_wall_ray(game_data_t *d, size_t x)
+void cast_wall_ray(engine_t *engine, game_data_t *d, size_t x)
 {
     ray_t ray = {0};
 
-    init_raycast_struct(d, x, &ray);
+    init_raycast_struct(engine, d, x, &ray);
     get_ray_step_dir(&ray, d);
     get_ray_perpendicular_dist(&ray, d);
-    get_wall_info(&ray, d);
+    get_wall_info(engine, &ray, d);
     get_ray_texture(&ray, d);
     append_to_vertices(&ray, d, x);
 }

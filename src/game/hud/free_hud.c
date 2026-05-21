@@ -6,6 +6,7 @@
 */
 
 #include "game.h"
+#include "graphics/sprite_anim.h"
 
 void free_hud(hud_t *hud)
 {
@@ -19,5 +20,11 @@ void free_hud(hud_t *hud)
         sfView_destroy(hud->mini_map);
     if (hud->timer)
         sfText_destroy(hud->timer);
+    if (hud->cursor)
+        sprite_anim_destroy(hud->cursor);
+    if (hud->ammo_sprite)
+        sfSprite_destroy(hud->ammo_sprite);
+    if (hud->ammo_text)
+        sfText_destroy(hud->ammo_text);
     free(hud);
 }

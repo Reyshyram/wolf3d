@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Color.h>
 #include <SFML/Graphics/RectangleShape.h>
 #include <SFML/Graphics/RenderWindow.h>
+#include <SFML/Graphics/View.h>
 #include <SFML/System/Clock.h>
 #include <SFML/System/Time.h>
 #include <SFML/Window/Event.h>
@@ -56,6 +57,24 @@ static void update_transition_rect(engine_t *engine)
     sfRectangleShape_setFillColor(engine->transition_rect, color);
 }
 
+static void handle_resize(engine_t *engine, sfEvent *event)
+{
+    sfView *view = sfView_create();
+
+    engine->window_size = (sfVector2u) {event->size.width, event->size.height};
+    if (engine->transition_rect)
+        sfRectangleShape_setSize(engine->transition_rect,
+            (sfVector2f) {(float) engine->window_size.x,
+                (float) engine->window_size.y});
+    sfView_reset(view,
+        (sfFloatRect) {0, 0, (float) engine->window_size.x,
+            (float) engine->window_size.y});
+    sfRenderWindow_setView(engine->window, view);
+    if (engine->scene && engine->scene->on_resize)
+        engine->scene->on_resize(engine);
+    sfView_destroy(view);
+}
+
 static void handle_events(engine_t *engine)
 {
     sfEvent event;
@@ -63,6 +82,8 @@ static void handle_events(engine_t *engine)
     while (sfRenderWindow_pollEvent(engine->window, &event)) {
         if (event.type == sfEvtClosed)
             sfRenderWindow_close(engine->window);
+        if (event.type == sfEvtResized)
+            handle_resize(engine, &event);
         if (engine->scene && engine->scene->handle_events)
             engine->scene->handle_events(engine, &event);
     }
